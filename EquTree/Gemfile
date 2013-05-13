@@ -1,38 +1,91 @@
+# ========================================================================= 
+# ------------------------------------------------------------------------- 
+#
+#  \date		May 2013
+#  \author		TNick
+#
+#  \brief		Controlls the dependencies of our project
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Please read COPYING and README files in root folder
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# ------------------------------------------------------------------------- 
+# ========================================================================= 
+//
+//
+//
+//
+#  INCLUDES    ------------------------------------------------------------ 
+
 source 'https://rubygems.org'
+
+#  INCLUDES    ============================================================ 
+//
+//
+//
+//
+#  COMMON GEMS    --------------------------------------------------------- 
+
 
 gem 'rails', '3.2.13'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# To use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.0.0'
 
-gem 'sqlite3'
-
-
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-end
-
+# jQuerry for rails
 gem 'jquery-rails'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+# some pretty formatting
+gem 'bootstrap-sass', '2.1'
 
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
+#  COMMON GEMS    ========================================================= 
+//
+//
+//
+//
+#  DEVELOPMENT    ---------------------------------------------------------
 
-# Use unicorn as the app server
-# gem 'unicorn'
+group :development do
+  
+  # using sqlite in LOCAL MACHINE
+  gem 'sqlite3', '1.3.5'
+  
+  # for testing we're using RSpec
+  gem 'rspec-rails', '2.11.0'
+  gem 'guard-rspec', '1.2.1'
+  
+  # add some smart comments about the structure of our tables
+  gem 'annotate', '2.5.0'
+  
+end
 
-# Deploy with Capistrano
-# gem 'capistrano'
+#  DEVELOPMENT    =========================================================
+//
+//
+//
+//
+#  TESTS    ---------------------------------------------------------------
 
-# To use debugger
-# gem 'debugger'
+group :test do
+  
+  # using sqlite in LOCAL MACHINE
+  gem 'sqlite3', '1.3.5'
+  
+  # for testing we're using RSpec
+  gem 'rspec-rails', '2.11.0'
+  gem 'guard-rspec', '1.2.1'
+  
+  # easly create database components
+  gem 'factory_girl_rails', '4.1.0'
+  
+end
+
+#  TESTS    ===============================================================
+//
+//
+//
+//
+# ------------------------------------------------------------------------- 
+# ========================================================================= 

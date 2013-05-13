@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-EquTree::Application.config.secret_token = '0f558f9bc2155863f7b5f4e7d62d5b00f4f83095f6d5e991b04a380a7becb2a330143f78cf5d7eed6850e645a75c6c2ad23f7eb4eeaa74ed5d286ccff197e853'
+EquTree::Application.config.secret_token = 'e31b01698c561de085a1ee6a3b16fcd835baafb989d8a60c0a893b020e79fd7c8f37da1e2bbd02ac326d5d151b29de989c77240ae850125fc0c6102d6c33510d'
