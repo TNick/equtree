@@ -30,6 +30,11 @@ class ApplicationController < ActionController::Base
   # submitting to the Rails application.  
   protect_from_forgery
   
+  
+  # sign-in / sign-out facilities are exposed to all controllers
+  include SessionsHelper
+  
+  
   # ----------------------------------------------------------------------
   # Force signout to prevent CSRF attacks
   def handle_unverified_request
