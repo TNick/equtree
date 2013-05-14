@@ -4,8 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		Helper code available in Views/Helpers; may be          -%>
-<%-#                explicitly included in other places                     -%>
+<%-#  \brief		Partial view that presents the errors for forms         -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -18,81 +17,30 @@
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
-<%-#  HEADER    ----------------------------------------------------------- -%>
-
-
-<%-# HTML5 document -%>
-<!DOCTYPE html>
-
-
-<html>
-
-
-  <head>
-    
-    
-    <%-# use full_title from ApplicationHelper module to generate it -%>
-    <title>
-      <%= full_title(yield(:title)) %>
-    </title>
-    
-    
-    <%-# standard components: stylesheets, javascript, ... -%>
-    <%= stylesheet_link_tag    "application", media: "all" %>
-    <%= javascript_include_tag "application" %>
-    <%= csrf_meta_tags %>
-    
-    
-    <%-# some vendor specific set-up to emulate HTML5 -%>
-    <%= render 'layouts/shim' %>  
-    
-    
-  </head>
-  
-<%-#  HEADER    =========================================================== -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
-  
-  <body>
-  
-    <%-# common header -%>
-	<%= render 'layouts/header' %>
-	
-	
-	<%-# container div for the rest of the page -%>
-    <div class="container">
-    
-    
-      <%-# Temporary messages get presented in this space -%>
-	  <% flash.each do |key, value| %>        
-        <%= content_tag( :div, value, class: "alert alert-#{key}" ) %>
-      <% end %>
-      
-      
-      <%-# Actual content of the page -%>
-      <%= yield %>
-      
-      
-      <%-# common footer -%>
-	  <%= render 'layouts/footer' %>
-	  
-	  
-	  <%-# debug information only visible in development environment -%>
-	  <%= debug(params) if Rails.env.development? %>
-	  
-	  
-    </div>
-    
-    
-  </body>
-  
-  
-</html>
+<% if object.errors.any? %>
 
+
+  <div id="error_explanation">
+
+
+    <div class="alert alert-error">
+      The form contains <%= pluralize(object.errors.count, "error") %>.
+    </div>
+
+
+    <ul>
+      <% object.errors.full_messages.each do |msg| %>
+        <li>* <%= msg %></li>
+      <% end %>
+    </ul>
+
+
+  </div>
+
+
+<% end %>
 
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>

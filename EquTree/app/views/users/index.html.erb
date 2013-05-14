@@ -4,8 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		Helper code available in Views/Helpers; may be          -%>
-<%-#                explicitly included in other places                     -%>
+<%-#  \brief		View for editing user profile                           -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -20,35 +19,9 @@
 <%-#                                                                        -%>
 <%-#  HEADER    ----------------------------------------------------------- -%>
 
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
 
-<%-# HTML5 document -%>
-<!DOCTYPE html>
-
-
-<html>
-
-
-  <head>
-    
-    
-    <%-# use full_title from ApplicationHelper module to generate it -%>
-    <title>
-      <%= full_title(yield(:title)) %>
-    </title>
-    
-    
-    <%-# standard components: stylesheets, javascript, ... -%>
-    <%= stylesheet_link_tag    "application", media: "all" %>
-    <%= javascript_include_tag "application" %>
-    <%= csrf_meta_tags %>
-    
-    
-    <%-# some vendor specific set-up to emulate HTML5 -%>
-    <%= render 'layouts/shim' %>  
-    
-    
-  </head>
-  
 <%-#  HEADER    =========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
@@ -56,42 +29,15 @@
 <%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
-  
-  <body>
-  
-    <%-# common header -%>
-	<%= render 'layouts/header' %>
-	
-	
-	<%-# container div for the rest of the page -%>
-    <div class="container">
-    
-    
-      <%-# Temporary messages get presented in this space -%>
-	  <% flash.each do |key, value| %>        
-        <%= content_tag( :div, value, class: "alert alert-#{key}" ) %>
-      <% end %>
-      
-      
-      <%-# Actual content of the page -%>
-      <%= yield %>
-      
-      
-      <%-# common footer -%>
-	  <%= render 'layouts/footer' %>
-	  
-	  
-	  <%-# debug information only visible in development environment -%>
-	  <%= debug(params) if Rails.env.development? %>
-	  
-	  
-    </div>
-    
-    
-  </body>
-  
-  
-</html>
+<%= will_paginate %>
+
+  <ul class="users">
+
+    <%= render @users %>
+
+  </ul>
+
+<%= will_paginate %>
 
 
 <%-#  CONTENT    ========================================================== -%>
