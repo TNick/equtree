@@ -23,17 +23,8 @@
 
 EquTree::Application.routes.draw do
   
-  get "users/new"
-
-  get "users/show"
-
-  get "users/index"
-
-  get "users/edit"
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
-  
   
   # ----------------------------------------------------------------------
   # create all routes for users
@@ -66,6 +57,18 @@ EquTree::Application.routes.draw do
   # ======================================================================
   
   
+  # ----------------------------------------------------------------------
+  # create routes for directories
+  resources :directories, only: [:create, :destroy]
+  
+  #   HTTP Verb 	Path 		action 		used for
+  #   ----------------------------------------------------
+  #   POST 			/directory 		create 		create the new directory
+  #   DELETE 		/directory 		destroy 	delete the directory resource 
+  
+  # ======================================================================
+
+    
   # ----------------------------------------------------------------------
   # both default and /home go to our home page
 

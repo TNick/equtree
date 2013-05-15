@@ -4,7 +4,7 @@
 #  \date		May 2013
 #  \author		TNick
 #
-#  \brief		The controller for static pages
+#  \brief		The controller for user directories
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,50 +19,43 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# the controller for static pages
-class StaticPagesController < ApplicationController
+# the controller for user directories
+class DirectoriesController < ApplicationController
   
 
   # ----------------------------------------------------------------------
-  # Home page
-  def home
+  # only allow a signed in user to create or destroy
+  before_filter :signed_in_user
 
-    # have a directory ready if user decides to create one
-    @directory = current_user.directories.build if signed_in?
-    @directories = current_user.directories
-    
-  end # def home
+  # only allow correct user to destroy
+  before_filter :correct_user,   only: :destroy
+  
+  # ======================================================================
+
+
+  # ----------------------------------------------------------------------
+  # Create the directory
+  def create
+    @directory = current_user.directories.build(params[:directory])
+    if @directory.save
+      flash[:success] = "Directory created!"
+      redirect_to root_url
+    else
+      render 'static_pages/home'
+    end
+  end # def create
   # ======================================================================
   
   # ----------------------------------------------------------------------
-  # Help page
-  def help
-
-    # stub; simply show the view in app/views/static_pages
-
-  end # def help
+  # Remove an user
+  def destroy
+    @directory.destroy
+    redirect_to root_url
+  end # def destroy
   # ======================================================================
 
-  # ----------------------------------------------------------------------
-  # About page
-  def about
 
-    # stub; simply show the view in app/views/static_pages
-
-  end # def about
-  # ======================================================================
-  
-  # ----------------------------------------------------------------------
-  # Contact page
-  def contact
-
-    # stub; simply show the view in app/views/static_pages
-
-  end # def contact
-  # ======================================================================
-  
-
-end # class StaticPagesController
+end # class DirectoriesController
 
 #  CLASS    ===============================================================
 #

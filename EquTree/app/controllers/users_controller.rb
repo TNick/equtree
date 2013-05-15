@@ -52,7 +52,10 @@ class UsersController < ApplicationController
 
     # get the user to show from parameters
     @user = User.find(params[:id])
-
+    
+    # get its directories
+    @directories = @user.directories.paginate( page: params[:page] )
+    
   end # def show
   # ======================================================================
 
