@@ -4,7 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		Partial view for creating directories                   -%>
+<%-#  \brief		Presents a directory                                    -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -20,51 +20,15 @@
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
 
-<div class="directory-label">
-  Directories
-</div>
-
-<div class="directory_tree" id="directory_tree">
-    <%= nested_directories( @directories ) %>
-</div>
-
-<script>
-$(function() {
-    var dt = $("#directory_tree")
-    dt.jstree({
-        "themes" :  { 
-                    "theme" : "classic", 
-                    "dots" : "true", 
-                    "icons" : "true" 
-               },
-        "plugins": [ "ui", "html_data", "themes" ]
-    });
-    dt.bind("select_node.jstree", function (event, data) {
-            //alert( data.rslt.obj.attr("href") );
-           console.log( data.rslt.obj.attr("id") );
-           console.log( dt.jstree('get_selected').attr('id') );
-    });
-    setTimeout(function () { dt.jstree("set_focus"); }, 500);
-
-});
-</script>
-
-
-<hr/>
-
-<%= form_for(@directory) do |f| %>
-
-  <%= render 'shared/error_messages', object: f.object %>
-  
-  <div class="field">
-    <%= f.text_field :name, placeholder: "Directory name" %>
-  </div>
-  <%= f.submit "Top", class: "btn" %>
-  <%= f.submit "Create", class: "btn  btn-primary" %>
-  <%= f.submit "Delete", class: "btn" %>
-  <%= f.submit "Change", class: "btn" %>
-
-<% end %>
+<ul><li id="dir_leaf_<%= directory.id %>" >
+  <a class="directory-entry" 
+      href="">
+    <%= directory.name %>
+  </a>
+  <ul class="nested_directories">
+    <% nested_directories( subdirectories ) %>
+  </ul>
+</li></ul>
 
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>

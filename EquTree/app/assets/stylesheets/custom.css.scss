@@ -226,3 +226,25 @@ input {
 .nested_messages .nested_messages .nested_messages .nested_messages {
   margin-left: 0;
 }
+
+
+.directory-tree {
+  background-color: $grayMediumLight;
+  overflow: auto;
+  @include box_sizing;
+}
+
+.directory-label {
+  text-decoration:underline;
+  font: bold;
+}
+
+directory-entry {
+  
+}
+
+
+
+
+
+

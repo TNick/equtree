@@ -24,16 +24,18 @@ module DirectoriesHelper
   
   # -----------------------------------------------------------------------
   # 
-  def nested_messages(messages)
-  
-    messages.map do |message, sub_messages|
-      render(message) + 
-      content_tag(
-        :div, 
-        nested_messages(sub_messages), 
-        :class => "nested_messages")
-    end.join.html_safe
-    
+  def nested_directories(directories)
+    if ( directories != nil )
+      directories.map do |dir_iter,sub_directories|
+        if ( dir_iter.name != nil )
+          render :partial => "shared/directory", 
+                 :locals => { 
+                    :directory => dir_iter, 
+                    :subdirectories => sub_directories 
+                 }
+        end
+      end.join.html_safe
+    end
   end
   # =======================================================================
   

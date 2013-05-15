@@ -28,9 +28,11 @@ class StaticPagesController < ApplicationController
   def home
 
     # have a directory ready if user decides to create one
-    @directory = current_user.directories.build if signed_in?
-    @directories = current_user.directories
-    
+    if signed_in?
+      @directory = current_user.directories.build 
+      @directories = current_user.directories
+    end
+
   end # def home
   # ======================================================================
   
