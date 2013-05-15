@@ -4,11 +4,11 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		File inserted at the to of every generated html         -%>
+<%-#  \brief		Partial view for a single user                          -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
-<%-# Please read COPYING and README files in root folder-%>
+<%-# Please read COPYING and README files in root folder                    -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -%>
 <%-#                                                                        -%>
 <%-# ---------------------------------------------------------------------- -%>
@@ -17,40 +17,27 @@
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
-<%-#  FOOTER    ----------------------------------------------------------- -%>
+<%-#  HEADER    ----------------------------------------------------------- -%>
 
-<footer class="footer">
+<%-#  HEADER    =========================================================== -%>
+<%-#                                                                        -%>
+<%-#                                                                        -%>
+<%-#                                                                        -%>
+<%-#                                                                        -%>
+<%-#  CONTENT    ---------------------------------------------------------- -%>
+  
+<li>
 
+  <%= gravatar_for user, size: 52 %>
+  <%= link_to user.name, user %>
+  <% if current_user.admin? && !current_user?(user) %>
+    | <%= link_to "delete", user, method: :delete,
+                                  data: { confirm: "You sure?" } %>
+  <% end %>
+  
+</li>
 
-  <small>
-    <a href="">EquTree</a>
-    by Nicu Tofan
-  </small>
-  
-  
-  <nav>
-  
-  
-    <ul>
-    
-    
-      <li><%= link_to "About",   about_path %></li>
-      
-      <li><%= link_to "Contact", contact_path %></li>
-      
-      <%-# @TODO path to news -%>
-      <li><a href="#">Blog</a></li>
-      
-      
-    </ul>
-    
-    
-  </nav>
-  
-  
-</footer>
-
-<%-#  FOOTER    =========================================================== -%>
+<%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>

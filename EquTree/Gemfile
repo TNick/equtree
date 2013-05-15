@@ -31,14 +31,17 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
 
-# To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
-
 # jQuerry for rails
 gem 'jquery-rails'
 
-# some pretty formatting
-gem 'bootstrap-sass', '2.1'
+# To use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.0.0'
+
+# helper for paginating long lists
+gem 'will_paginate', '3.0.3'
+gem 'bootstrap-will_paginate', '0.0.6'
+
+
 
 #  COMMON GEMS    ========================================================= 
 //
@@ -83,6 +86,29 @@ group :test do
 end
 
 #  TESTS    ===============================================================
+//
+//
+//
+//
+#  ASSETS    --------------------------------------------------------------
+
+group :assets do
+
+  # better css 
+  gem 'sass-rails',   '~> 3.2.5'
+  
+  # javascripting
+  gem 'coffee-rails', '~> 3.2.2'
+  
+  # uglify javascript so that people can't read it; why?
+  gem 'uglifier', '>= 1.2.4'
+  
+  # some pretty formatting
+  gem 'bootstrap-sass', '2.1'
+  
+end
+
+#  ASSETS    ==============================================================
 //
 //
 //
