@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130515105427) do
+ActiveRecord::Schema.define(:version => 20130516052503) do
 
   create_table "directories", :force => true do |t|
     t.string   "name"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(:version => 20130515105427) do
 
   add_index "directories", ["ancestry"], :name => "index_directories_on_ancestry"
   add_index "directories", ["user_id", "created_at"], :name => "index_directories_on_user_id_and_created_at"
+
+  create_table "sheets", :force => true do |t|
+    t.string   "name"
+    t.string   "directory_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "sheets", ["directory_id", "created_at"], :name => "index_sheets_on_directory_id_and_created_at"
 
   create_table "users", :force => true do |t|
     t.string   "name"

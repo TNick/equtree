@@ -19,19 +19,9 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# models the data associated with a directory
+# models the data associated with a sheet
 #
-# == Schema Information
-#
-# Table name: users
-#
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-#
-class Directory < ActiveRecord::Base
+class Sheet < ActiveRecord::Base
   
   #
   #
@@ -50,12 +40,9 @@ class Directory < ActiveRecord::Base
   # the list of attributes that are accesible for get/set
   attr_accessible :name
   # :user_id is not accesible
-  
-  # will be arranged in a tree
-  has_ancestry
 
-  # any directory is part of an user
-  belongs_to :user
+  # any sheet is part of a directory
+  belongs_to :directory
   
   #  ATTRIBUTES    ========================================================
   #
@@ -64,12 +51,12 @@ class Directory < ActiveRecord::Base
   #
   #  VALIDATION    --------------------------------------------------------
 
-  # there must always be a name that is between 2 and 50 characters long
+  # there must always be a name that is between 1 and 50 characters long
   validates :name,	presence: true, 
 					length: { minimum: 1, maximum: 50 }
 
   # always have an user
-  validates :user_id, 
+  validates :directory_id, 
                     presence: true
 
 
@@ -96,7 +83,7 @@ private
   #
   #
   
-end # class Directory
+end # class Sheet
 
 #  CLASS    ===============================================================
 #
