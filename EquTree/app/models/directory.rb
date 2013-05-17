@@ -48,9 +48,9 @@ class Directory < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name
+  attr_accessible :name, :parent_id
   # :user_id is not accesible
-  
+
   # will be arranged in a tree
   has_ancestry
 

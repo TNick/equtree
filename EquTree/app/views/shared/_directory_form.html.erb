@@ -40,11 +40,10 @@ $(function() {
         "plugins": [ "ui", "html_data", "themes" ]
     });
     dt.bind("select_node.jstree", function (event, data) {
-            //alert( data.rslt.obj.attr("href") );
-           console.log( data.rslt.obj.attr("id") );
-           console.log( dt.jstree('get_selected').attr('id') );
+           var elem = document.getElementById("dir_selectedid");
+           elem.value = data.rslt.obj.attr("id");
     });
-    setTimeout(function () { dt.jstree("set_focus"); }, 500);
+    setTimeout(function () { dt.jstree("set_focus"); }, 100);
 
 });
 </script>
@@ -59,16 +58,17 @@ $(function() {
   <div class="field">
     <%= f.text_field :name, placeholder: "Directory name" %>
   </div>
-  <%= f.submit "Top", class: "btn" %>
-  <%= f.submit "Create", class: "btn  btn-primary" %>
-  <%= f.submit "Delete", class: "btn" %>
-  <%= f.submit "Change", class: "btn" %>
+  <%= f.submit "Top", class: "btn", :name => "top" %>
+  <%= f.submit "Create", class: "btn  btn-primary", :name => "create" %>
+  <%= f.submit "Delete", class: "btn", :name => "del" %>
+  <%= f.submit "Change", class: "btn", :name => "chg" %>
   <div style="display:inline">
     <%= radio_button_tag(:fstype, "dir", checked = true, ) %>
     <%= label_tag(:fstype_dir, "Directory",:style => "display:inline") %>
     <%= radio_button_tag(:fstype, "file", checked = false) %>
     <%= label_tag(:fstype_file, "File", :style => "display:inline") %>
   </div>
+  <%= hidden_field_tag :dir_selectedid %>
 <% end %>
 
 <%-#  CONTENT    ========================================================== -%>

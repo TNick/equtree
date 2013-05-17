@@ -46,11 +46,10 @@ EquTree::Application.routes.draw do
   # ----------------------------------------------------------------------
   # create routes for session
   
-  resources :sessions, only: [:new, :create, :destroy]
+  resources :sessions, only: [:create, :destroy]
   
   #   HTTP Verb 	Path 		action 		used for
   #   ----------------------------------------------------
-  #   GET 			/session/new 	new 		creating the session
   #   POST 			/session 		create 		create the new session
   #   DELETE 		/session 		destroy 	delete the session resource 
   
@@ -59,10 +58,11 @@ EquTree::Application.routes.draw do
   
   # ----------------------------------------------------------------------
   # create routes for directories
-  resources :directories, only: [:create, :destroy]
+  resources :directories, only: [:new, :create, :destroy]
   
   #   HTTP Verb 	Path 		action 		used for
   #   ----------------------------------------------------
+  #   GET 			/directory/new 	new 		creating the dir
   #   POST 			/directory 		create 		create the new directory
   #   DELETE 		/directory 		destroy 	delete the directory resource 
   
