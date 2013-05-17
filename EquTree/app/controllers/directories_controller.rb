@@ -35,7 +35,7 @@ class DirectoriesController < ApplicationController
 
   # ----------------------------------------------------------------------
   # Create the directory
-  def create
+  def create 
     @directory = current_user.directories.build(params[:directory])
     if @directory.save
       flash[:success] = "Directory created!"
