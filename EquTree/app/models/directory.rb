@@ -19,7 +19,7 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# models the data associated with a directory
+# models the data associated with an directory
 #
 # == Schema Information
 #
@@ -96,7 +96,7 @@ private
   #
   #
   
-end # class Directory
+end # class User
 
 #  CLASS    ===============================================================
 #

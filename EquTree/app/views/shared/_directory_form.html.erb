@@ -52,7 +52,7 @@ $(function() {
 
 <hr/>
 
-<%= form_for(@directory, :html => { :style => 'display: inline;' }) do |f| %>
+<%= form_for(@directory) do |f| %>
 
   <%= render 'shared/error_messages', object: f.object %>
   
@@ -63,12 +63,7 @@ $(function() {
   <%= f.submit "Create", class: "btn  btn-primary" %>
   <%= f.submit "Delete", class: "btn" %>
   <%= f.submit "Change", class: "btn" %>
-  <div style="display:inline">
-    <%= radio_button_tag(:fstype, "dir", checked = true, ) %>
-    <%= label_tag(:fstype_dir, "Directory",:style => "display:inline") %>
-    <%= radio_button_tag(:fstype, "file", checked = false) %>
-    <%= label_tag(:fstype_file, "File", :style => "display:inline") %>
-  </div>
+
 <% end %>
 
 <%-#  CONTENT    ========================================================== -%>
