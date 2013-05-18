@@ -58,11 +58,10 @@ EquTree::Application.routes.draw do
   
   # ----------------------------------------------------------------------
   # create routes for directories
-  resources :directories, only: [:new, :create, :destroy]
+  resources :directories, only: [:create, :destroy]
   
   #   HTTP Verb 	Path 		action 		used for
   #   ----------------------------------------------------
-  #   GET 			/directory/new 	new 		creating the dir
   #   POST 			/directory 		create 		create the new directory
   #   DELETE 		/directory 		destroy 	delete the directory resource 
   
@@ -94,6 +93,12 @@ EquTree::Application.routes.draw do
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
   
+  #   HTTP Verb 	Path 		Route			Action 		Used for...
+  #   -------------------------------------------------------------------------------------
+  #   GET			/signin		signin_path		new			page for a new session (signin)
+  #   POST			/sessions	sessions_path	create		create a new session
+  #   DELETE		/signout	signout_path	destroy		delete a session (sign out)
+
   # ======================================================================
   
   
