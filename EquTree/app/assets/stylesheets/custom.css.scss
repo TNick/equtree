@@ -228,28 +228,3 @@ input {
 }
 
 
-.directory-tree {
-  background-color: $grayMediumLight;
-  overflow: auto;
-  @include box_sizing;
-}
-
-.directory-label {
-  text-decoration:underline;
-  font: bold;
-}
-
-directory-entry {
-  
-}
-
-input[type="radio"], label{
-  display:inline-block;
-  *display:inline/*For IE7*/
-}
-label{
-  padding-top: 8px;
-}
-
-
-

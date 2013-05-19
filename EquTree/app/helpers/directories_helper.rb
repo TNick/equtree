@@ -32,7 +32,7 @@ module DirectoriesHelper
     directories.map do |diriter,subdirectories|
       if diriter.nil? == false && diriter.name.nil? == false 
         a_ret = a_ret + 
-             "<ul><li id=\"dir_leaf_" + String(diriter.id) + "\">\n" +
+             "<ul><li id=\"fs_edir_" + String(diriter.id) + "\" rel=\"directory\">\n" +
              "<a class=\"directory-entry\" href=\"\">"+ 
              diriter.name + "</a>\n"
         if subdirectories.nil? == false

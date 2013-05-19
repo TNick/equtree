@@ -61,6 +61,8 @@ describe "User model" do
   it { should respond_to( :password_digest ) }
   it { should respond_to( :remember_token ) }
   it { should respond_to( :admin ) }
+  it { should respond_to( :authenticate ) }
+  it { should respond_to( :directories ) }
   it { should be_valid }
   it { should_not be_admin }
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -209,7 +211,29 @@ describe "User model" do
   
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+  describe "directory association" do
+	before { @user.save }
+	let!( :rootdir ) { FactoryGirl.create(:directory, user: @user) }
+	
+	it "factory should create valid instance" do
+	  rootdir.should be_valid
+	end
+	
+	it "should have right directory" do
+	  @user.directories.should == [rootdir]
+	end
+	
+	it "should destroy associated directories" do
+      directories = @user.directories.dup
+	  directories.should_not be_empty
+      @user.destroy
+      directories.should_not be_empty
+      directories.each do |directory|
+        Directory.find_by_id(directory.id).should be_nil
+      end
+    end
+	
+  end # "directory association"
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -222,7 +246,7 @@ describe "User model" do
   
   
 
-end # describe "Static pages"
+end # describe "User model"
 # ========================================================================= 
 
 #  TESTS    ==============================================================

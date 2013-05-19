@@ -22,16 +22,6 @@
 # the controller for sessions
 class SessionsController < ApplicationController
   
-
-  # ----------------------------------------------------------------------
-  # Creating a new session
-  def new
-
-    # stub
-
-  end # def new
-  # ======================================================================
-  
   # ----------------------------------------------------------------------
   # Log in attempt
   def create

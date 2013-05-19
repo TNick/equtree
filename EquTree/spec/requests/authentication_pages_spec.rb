@@ -153,7 +153,7 @@ describe "Authentication Pages: " do
 
       before { sign_in non_admin }
 
-      describe "submitting a DELETE request to the Users#destroy action" do
+      describe "submiting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
         specify { response.should redirect_to(root_path) }        
       end
