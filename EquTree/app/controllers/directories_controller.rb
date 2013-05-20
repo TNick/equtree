@@ -26,7 +26,7 @@ FSTYPE_FILE = 1
 
 # the controller for user directories
 class DirectoriesController < ApplicationController
-  respond_to :json # do |format|
+  respond_to :json
   
 
   # ----------------------------------------------------------------------
@@ -46,13 +46,17 @@ class DirectoriesController < ApplicationController
     d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     d params
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    b  = false
     case params[:action_id]
     when 'new_file'
       create_file
+      b = true
     when 'new_dir'
       create_directory
-    when 'edit_name'
-      rename_fs_item and return
+      b = true
+    when 'edit_name' 
+      rename_fs_item
+      b = true
     when 'cut'
       a = 1 # TODO
     when 'copy'
@@ -61,6 +65,7 @@ class DirectoriesController < ApplicationController
       a = 1 # TODO
     when 'delete'
       delete_fs_item
+      b = true
     when 'undo'
       a = 1 # TODO
     when 'redo'
@@ -69,9 +74,16 @@ class DirectoriesController < ApplicationController
       d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
       d "bad arguments"
       d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-      redirect_to root_url
+      render json: 'Unknown function', status: :unprocessable_entity and return
     end
-    return
+    if b
+      return
+    end
+      
+    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "Not implemented"
+    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    render json: 'Not implemented (yet)', status: :unprocessable_entity and return
     
   end # def create
   # ======================================================================
@@ -97,36 +109,22 @@ private
     if pid <= 0
       pid = nil
     end
-    d { pid }
     @directory = current_user.directories.build( 
       name: params[:name],
       parent_id: pid
     )
-    # $("<%= escape_javascript() %>").appendTo("#directory_tree");
-
-    respond_to do |format|
-      if @directory.save
-        #format.html { redirect_to root_url, notice: 'Directory was successfully created.' }
-        #format.js   { render :action => 'create_dir' }
-        format.json { render json: { 
-                                    action_id: params[:action_id],
-                                    new_id: @directory.id,
-                                    new_name: @directory.name,
-                                    parent_id: @directory.parent_id,
-                                    kind_name: 'directory'
-                                    },
-                      status: :success }
-      else
-        #format.html { 
-        #  flash[:error] = "Directory creation failed!\n" 
-        #  + @directory.errors.full_messages.join("\n") 
-        #  redirect_to root_url
-        #}
-        format.json { render json: @directory.errors, status: :unprocessable_entity }
-      end
+    if @directory.save
+      reponse = { action_id: params[:action_id],
+                  new_id: @directory.id,
+                  new_name: @directory.name,
+                  parent_id: @directory.parent_id,
+                  kind_name: 'directory'
+                }
+      render :json => reponse, :layout => false, :status => 200 and return
+    else
+      render json: @directory.errors, :layout => false, 
+          status: :unprocessable_entity and return
     end
-
-    
   end # def create_directory
   # ======================================================================
 
@@ -137,12 +135,36 @@ private
     d "create_file"
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
     
-    parent_dir = Directory.find( params[:sel_id] )
-    @dfile = parent_dir.files.build(
+    parent_dir = Directory.find_by_id( params[:sel_id] )
+    if !parent_dir
+      render json: 'The directory does not exist', :layout => false, 
+          status: :unprocessable_entity and return
+    end
+    d parent_dir
+    d parent_dir.dfiles
+    @dfile = parent_dir.dfiles.build(
       name: params[:name],
-      type: params[:type]
+      ftype: params[:ftype]
     )
-    # TODO implement
+    d @dfile
+    if !@dfile
+      render json: @dfile.errors, :layout => false, 
+          status: :unprocessable_entity and return
+    end
+    if @dfile.save
+      reponse = { action_id: params[:action_id],
+                  new_id: @dfile.id,
+                  new_name: @dfile.name,
+                  parent_id: @dfile.directory_id,
+                  kind_name: @dfile.typeName()
+                }
+      render :json => reponse, :layout => false, :status => 200 and return
+    else
+      render json: @dfile.errors, :layout => false, 
+          status: :unprocessable_entity and return
+    end
+    
+
   end # def create_file
   # ======================================================================
 
@@ -150,99 +172,69 @@ private
   # Rename a file or folder
   def rename_fs_item
 
+    err_str = ''
+    begin # a one time loop to allow break
     
-    begin
-      d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-      d "Rename a file or folder"
-      #d format
-      d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+      new_name = params[:name]
+      if ( new_name.blank? )
+        err_str = 'Empty name not allowed'
+        break
+      end
       
-      err_str = ''
-      begin # a one time loop to allow break
-        
-        new_name = params[:name]
-        if ( new_name.blank? )
-          err_str = 'Empty name not allowed'
-          break
-        end
-        
-        generic_ty = Integer(params[:sel_kind]) rescue generic_ty = FSTYPE_INVALID
-        elem_id = Integer(params[:sel_id]) rescue elem_id = -1
-        if ( elem_id <= 0 )
-          err_str = 'Invalid index'
-          break
-        end
-        
-        if ( generic_ty == FSTYPE_FILE )
-          to_upd = Dfile.find( elem_id )
-          if ( to_upd )
-            to_upd.name = new_name
-            if to_upd.save
-              format.json { render json: { 
-                                          action_id: params[:action_id],
-                                          new_id: to_upd.id,
-                                          new_name: to_upd.name,
-                                          parent_id: to_upd.directory_id,
-                                          kind_name: 'generic'
-                                          },
-                            status: :success }
-              return
-            else
-              err_str = 'Failed to save file name'
-              break
-            end
+      generic_ty = Integer(params[:sel_kind]) rescue generic_ty = FSTYPE_INVALID
+      elem_id = Integer(params[:sel_id]) rescue elem_id = -1
+      if ( elem_id <= 0 )
+        err_str = 'Invalid index'
+        break
+      end
+      
+      if ( generic_ty == FSTYPE_FILE )
+        to_upd = Dfile.find_by_id( elem_id )
+        if ( to_upd )
+          to_upd.name = new_name
+          if to_upd.save
+            reponse = { action_id: params[:action_id],
+                        new_id: to_upd.id,
+                        new_name: to_upd.name,
+                        parent_id: to_upd.directory_id,
+                        kind_name: 'generic'
+                      }
+            render :json => reponse, :layout => false, :status => 200 and return
           else
-            err_str = 'File does not exist'
-            break
-          end
-        elsif ( generic_ty == FSTYPE_DIR )
-          to_upd = Directory.find( elem_id )
-          if ( to_upd )
-            to_upd.name = new_name
-            if to_upd.save
-              d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-              d "renaming ok"
-              d to_upd
-              d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-              #format.json { 
-              reponse = { action_id: params[:action_id],
-                          new_id: to_upd.id,
-                          new_name: to_upd.name,
-                          parent_id: to_upd.parent_id,
-                          kind_name: 'directory'
-                        }
-              render :json => reponse, :layout => false, :status => 200 and return
-              
-              d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-              d "renaming ok  end"
-              d render_to_string :json => reponse # }
-              d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-             return
-            else
-              err_str = 'Failed to save directory'
-              break
-            end
-          else
-            err_str = 'Directory does not exist'
+            err_str = 'Failed to save file name'
             break
           end
         else
-          err_str = 'Invalid entry type'
+          err_str = 'File does not exist'
           break
         end
-        
-      end until true # a one time loop to allow break
-      d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-      d "Error renaming"
-      d err_str
-      d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-      #format.json { 
-      render json: err_str, status: :unprocessable_entity and return
-      #}
-    #end # respond_to do |format|
-    end until true
-    return
+      elsif ( generic_ty == FSTYPE_DIR )
+        to_upd = Directory.find_by_id( elem_id )
+        if ( to_upd )
+          to_upd.name = new_name
+          if to_upd.save
+            reponse = { action_id: params[:action_id],
+                        new_id: to_upd.id,
+                        new_name: to_upd.name,
+                        parent_id: to_upd.parent_id,
+                        kind_name: 'directory'
+                      }
+            render :json => reponse, :layout => false, :status => 200 and return
+          else
+            err_str = 'Failed to save directory'
+            break
+          end
+        else
+          err_str = 'Directory does not exist'
+          break
+        end
+      else
+        err_str = 'Invalid entry type'
+        break
+      end
     
+    end until true # a one time loop to allow break
+    render json: err_str, status: :unprocessable_entity and return
   end # def rename_fs_item
   # ======================================================================
 
@@ -253,7 +245,66 @@ private
     d "Delete a file or folder"
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
     
+    err_str = ''
+    begin # a one time loop to allow break
     
+      generic_ty = Integer(params[:sel_kind]) rescue generic_ty = FSTYPE_INVALID
+      elem_id = Integer(params[:sel_id]) rescue elem_id = -1
+      if ( elem_id <= 0 )
+        err_str = 'Invalid index'
+        break
+      end
+      
+      if ( generic_ty == FSTYPE_FILE )
+        to_upd = Dfile.find_by_id( elem_id )
+        if ( to_upd )
+          kindname = to_upd.fileType()
+          parent_id = to_upd.directory_id
+          our_name = to_upd.name
+          if to_upd.destroy
+            reponse = { action_id: params[:action_id],
+                        new_id: elem_id,
+                        new_name: our_name,
+                        parent_id: parent_id,
+                        kind_name: kindname
+                      }
+            render :json => reponse, :layout => false, :status => 200 and return
+          else
+            err_str = 'Failed to delete file'
+            break
+          end
+        else
+          err_str = 'File does not exist'
+          break
+        end
+      elsif ( generic_ty == FSTYPE_DIR )
+        to_upd = Directory.find_by_id( elem_id )
+        if ( to_upd )
+          parent_id = to_upd.parent_id
+          our_name = to_upd.name
+          if to_upd.destroy
+            reponse = { action_id: params[:action_id],
+                        new_id: elem_id,
+                        new_name: our_name,
+                        parent_id: parent_id,
+                        kind_name: 'directory'
+                      }
+            render :json => reponse, :layout => false, :status => 200 and return
+          else
+            err_str = 'Failed to delete directory'
+            break
+          end
+        else
+          err_str = 'Directory does not exist'
+          break
+        end
+      else
+        err_str = 'Invalid entry type'
+        break
+      end
+    
+    end until true # a one time loop to allow break
+    render json: err_str, status: :unprocessable_entity and return
   end # def delete_fs_item
   # ======================================================================
 
@@ -268,3 +319,4 @@ end # class DirectoriesController
 #
 # ------------------------------------------------------------------------- 
 # ========================================================================= 
+

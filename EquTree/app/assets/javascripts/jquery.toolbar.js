@@ -146,7 +146,7 @@ if ( typeof Object.create !== 'function' ) {
 
         collisionDetection: function() {
             var self = this;
-            var edgeOffset = 20;
+            var edgeOffset = 40;
             if(self.options.position == 'top' || self.options.position == 'bottom') {
                 self.arrowCss = {left: '50%', right: '50%'};
                 if( self.toolbarCss.left < edgeOffset ) {

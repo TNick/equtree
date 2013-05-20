@@ -54,7 +54,7 @@ class Dfile < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name, :type
+  attr_accessible :name, :ftype
   # :directory_id is not accesible
 
   # any directory is part of an user
@@ -73,7 +73,7 @@ class Dfile < ActiveRecord::Base
 					length: { minimum: 1, maximum: 50 }
 
   # always have a valid type
-  validates :type,	presence: true, 
+  validates :ftype,	presence: true, 
 					:numericality => { 
 					  :greater_than => FTYPE_MIN, 
 					  :less_than => FTYPE_MAX }
@@ -90,6 +90,20 @@ class Dfile < ActiveRecord::Base
   #
   #  MODIFIERS    ---------------------------------------------------------
 
+  # -----------------------------------------------------------------------
+  # get the name of the type
+  def typeName
+    case ftype
+    when FTYPE_TEST
+      return 'test'
+    when FTYPE_SHEET
+      return 'mathsheet'
+    else # 
+      return 'generic'
+    end
+  end
+  # =======================================================================
+  
   #  MODIFIERS    =========================================================
   #
   #

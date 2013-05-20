@@ -60,7 +60,7 @@ class Directory < ActiveRecord::Base
   belongs_to :user
   
   # files are rooted here
-  has_many :files
+  has_many :dfiles
   
   #  ATTRIBUTES    ========================================================
   #

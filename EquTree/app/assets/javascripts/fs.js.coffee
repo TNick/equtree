@@ -49,33 +49,6 @@ FSTYPE =
 #
 #  FUNCTIONS    ----------------------------------------------------------- 
 
-# $ ->
-  # $('#directory_tree').jstree.bind 'rename_node.jstree', (event, data) ->
-    # console.log event
-    # console.log data
-# $ ->
-  # $("#directory_tree").bind("open_node.jstree close_node.jstree", (e) ->
-    # console.log event
-    # console.log data
-  # )
-
-`
-// UPDATED -> NOW WORKS WITH jQuery 1.3.1
-$.fn.listHandlers = function(events, outputFunction) {
-    return this.each(function(i){
-        var elem = this,
-            dEvents = $(this).data('events');
-        if (!dEvents) {return;}
-        $.each(dEvents, function(name, handler){
-            if((new RegExp('^(' + (events === '*' ? '.+' : events.replace(',','|').replace(/^on/i,'')) + ')$' ,'i')).test(name)) {
-               $.each(handler, function(i,handler){
-                   outputFunction(elem, '\n' + i + ': [' + name + '] : ' + handler );
-               });
-           }
-        });
-    });
-};
-`
 # ------------------------------------------------------------------------- 
 # initialises the filesystem components for a page
 @fsInit = ->
@@ -116,40 +89,63 @@ $.fn.listHandlers = function(events, outputFunction) {
             position: '-16px 0px'
       ui:
         select_limit: 1
-    plugins: ['themes', 'html_data', 'ui', 'crrm', 'hotkeys', 'types']
+      hotkeys:
+        defaults:
+          functions:
+            's' : -> console.log "fuck"
+      
+    plugins: ['themes', 'html_data', 'ui', 'hotkeys', 'types'] # 'crrm',
+  a = 0 / 0
 
-  #dt.bind 'select_node.jstree', (event, data) ->
-  dt.jstree.bind 'rename_node.jstree', (event, data) ->
-    console.log event
-    console.log data
+  jQuery('#directory_tree').bind 'keypress', (event) -> 
+    console.log  event.which
+  $('#directory_tree').on 'keyup', (event) -> 
+    console.log  event.which    
+
+  jQuery('#directory_tree').bind 'rename_node.jstree', (event, data) -> 
+    if dt.changing_name is true
+      return
+    dt.changing_name = true
+    sel_id = data.rslt.obj.attr('id')
+    sel_kind = fsIdKind sel_id
+    ajax_data =
+      action_id: 'edit_name'
+      name: data.rslt.name
+      sel_id: sel_kind[1]
+      sel_kind: sel_kind[0]
+      move_ty: ''
+      other_id: -1
+      ftype: 2 # Dfile::FTYPE_SHEET to create TODO from node
+    fsSendAjax dt, ajax_data
+    dt.changing_name = false
+    # TODO find a way to set the name back to its original value
+    #dt.jstree( 'rename_node', data.rslt.obj, data.rslt.obj.text().replace(data.rslt.name,'').trim()  )
+
+  jQuery('#directory_tree').bind 'delete_node.jstree', (event, data) -> 
+    if dt.deleting_node is true
+      return
+    if not confirm( 'Are you sure you want to delete the item?' )
+        return
+    dt.deleting_node = true
+    sel_id = data.rslt.obj.attr('id')
+    sel_kind = fsIdKind sel_id
+    ajax_data =
+      action_id: 'delete'
+      name: data.rslt.name
+      sel_id: sel_kind[1]
+      sel_kind: sel_kind[0]
+      move_ty: ''
+      other_id: -1
+      ftype: 2 # Dfile::FTYPE_SHEET to create 
+    fsSendAjax dt, ajax_data
+    dt.deleting_node = false
+    # TODO find a way to prevent the delete TODO from node
+
+
+  setTimeout (->
+    dt.jstree 'set_focus'
+  ), 100
   
-  $('*').listHandlers('*', console.log);
-  
-  # dt.bind("move_node.jstree", (event, data) ->
-    # alert "move"
-  # ).bind("rename_node.jstree", (event, data) ->
-    # alert "rename"
-  # ).bind "create_node.jstree", (event, data) ->
-    # alert "create_node"
-
-    
-    # ajax_data =
-      # action_id: 'edit_name'
-      # name: "port"
-      # sel_id: sel_kind[1]
-      # sel_kind: sel_kind[0]
-      # move_ty: move_type
-      # other_id: other_id
-      # type: 2 # Dfile::FTYPE_SHEET  
-    # fsSendAjax dt, ajax_data
-
-  
-  #var elem = document.getElementById('dir_selectedid');
-  #elem.value = data.rslt.obj.attr('id');
-  # setTimeout (->
-    # dt.jstree 'set_focus'
-  # ), 100
-
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
@@ -274,32 +270,47 @@ fsSendAjax = (dt,ajax_data) ->
         else
           new_tag = $( '#fs_efile_' + data.new_id )
         
-        console.log new_tag
         if new_tag.length is 0
           fsError 'Item was not found on server; try to refresh the page.'
           return
+        dt.changing_name = true
         dt.jstree( 'rename_node', new_tag, data.new_name )
+        dt.changing_name = false
         
         
-#       when 'cut'
-#         
-#       when 'copy'
-#         
-#       when 'paste'
-#         
-#       when 'delete'
-#         
-#       when 'undo'
-#       
-#       when 'redo'
-#         # move along
-#       else
-#         
-                                   
-    #fsNotify 'Directory ' + new_name + ' was created'
+      when 'delete'
+        new_tag = null
+        if data.kind_name is 'directory'
+          new_tag = $( '#fs_edir_' + data.new_id )
+        else
+          new_tag = $( '#fs_efile_' + data.new_id )
+        if new_tag.length is 0
+          # TODO no error until we're not able to prevent item deletion
+          # fsError 'Item was not found on server; try to refresh the page.'
+          return
+        dt.deleting_node = true
+        dt.jstree( 'delete_node', new_tag, data.new_name )
+        dt.deleting_node = false
+        
+        #       when 'cut'
+        #         
+        #       when 'copy'
+        #         
+        #       when 'paste'
+        #            
+        #       when 'undo'
+        #       
+        #       when 'redo'
+        #         # move along
+        #       else
+        #         
     
   ).fail(->
-    fsError 'Can`t create directory ' + new_name + '.<br>' + jqxhr.statusText
+    fsError 'Can`t create directory ' + ajax_data.name + '.<br>' + 
+      jqxhr.responseText + '.<br>' + 
+      'status: ' + jqxhr.statusText
+      
+    console.log 
   )
 
 #.always(function() { alert('finished'); });
@@ -308,7 +319,6 @@ fsSendAjax = (dt,ajax_data) ->
 # ------------------------------------------------------------------------- 
 @fsAction = (action_id) ->
   fsHideNotif()
-  $('*').listHandlers('*', console.log);
   dt = $('#directory_tree')
   action_id = action_id.replace /tb_/, ''
   sel_id = dt.jstree('get_selected').attr('id')
@@ -369,7 +379,7 @@ fsSendAjax = (dt,ajax_data) ->
       sel_kind: sel_kind[0]
       move_ty: move_type
       other_id: other_id
-      type: 2 # Dfile::FTYPE_SHEET to create 
+      ftype: 2 # Dfile::FTYPE_SHEET to create TODO get from node
   fsSendAjax dt, ajax_data
 
 # ========================================================================= 
