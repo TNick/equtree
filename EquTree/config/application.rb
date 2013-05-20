@@ -1,6 +1,13 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+#require 'rails/all'
+
+require "active_record/railtie"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_resource/railtie"
+require "sprockets/railtie"
+
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
@@ -58,5 +65,16 @@ module EquTree
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    
+    
+    config.app_generators do |c|
+      c.test_framework :rspec, :fixture => true,
+                               :fixture_replacement => nil
+
+      c.integration_tool :rspec
+      c.performance_tool :rspec
+    end
+    
   end
 end
+

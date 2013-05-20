@@ -132,15 +132,13 @@ class UsersController < ApplicationController
   def destroy
 
     # check that current is not being deleted
-    crt_user = User.find( params[:id] )
-
-    # locate the user
     del_user = User.find( params[:id] )
 
     # avoid admin deleting itself
-    if ( crt_user == del_user )
+    if ( current_user?( del_user ) )
       flash[:error] = "Can't delete current user"
-      redirect_to( root_path )
+      redirect_to( users_url )
+	  return
     end
 
     # go delete from database

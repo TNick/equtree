@@ -19,7 +19,7 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# models the data associated with an directory
+# models the data associated with a directory
 #
 # == Schema Information
 #
@@ -27,19 +27,23 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)
-#  user_id    :integer
+#  directory_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  ancestry   :string(255)
 #
 #
-class Directory < ActiveRecord::Base
+class Dfile < ActiveRecord::Base
   
   #
   #
   #
   #
   #  DEFINITIONS    -------------------------------------------------------
+  
+  FTYPE_MIN = 0
+  FTYPE_TEST = 1
+  FTYPE_SHEET = 2
+  FTYPE_MAX = 3
   
   #  DEFINITIONS    =======================================================
   #
@@ -50,17 +54,12 @@ class Directory < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name, :parent_id
-  # :user_id is not accesible
-
-  # will be arranged in a tree
-  has_ancestry
+  attr_accessible :name, :type
+  # :directory_id is not accesible
 
   # any directory is part of an user
-  belongs_to :user
+  belongs_to :directory
   
-  # files are rooted here
-  has_many :files
   
   #  ATTRIBUTES    ========================================================
   #
@@ -73,8 +72,14 @@ class Directory < ActiveRecord::Base
   validates :name,	presence: true, 
 					length: { minimum: 1, maximum: 50 }
 
+  # always have a valid type
+  validates :type,	presence: true, 
+					:numericality => { 
+					  :greater_than => FTYPE_MIN, 
+					  :less_than => FTYPE_MAX }
+
   # always have an user
-  validates :user_id, 
+  validates :directory_id, 
                     presence: true
 
 
@@ -101,7 +106,7 @@ private
   #
   #
   
-end # class User
+end # class Dfile
 
 #  CLASS    ===============================================================
 #

@@ -4,7 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		Partial view for creating directories                   -%>
+<%-#  \brief		Partial view for the file system                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -20,52 +20,38 @@
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
 
-<div class="directory-label">
-  Directories
-</div>
-
-<div class="directory_tree" id="directory_tree">
-    <%= nested_directories( @directories ) %>
-</div>
-
-<script>
-$(function() {
-    var dt = $("#directory_tree")
-    dt.jstree({
-        "themes" :  { 
-                    "theme" : "classic", 
-                    "dots" : "true", 
-                    "icons" : "true" 
-               },
-        "plugins": [ "ui", "html_data", "themes" ]
-    });
-    dt.bind("select_node.jstree", function (event, data) {
-            //alert( data.rslt.obj.attr("href") );
-           console.log( data.rslt.obj.attr("id") );
-           console.log( dt.jstree('get_selected').attr('id') );
-    });
-    setTimeout(function () { dt.jstree("set_focus"); }, 500);
-
-});
-</script>
-
-
-<hr/>
-
-<%= form_for(@directory) do |f| %>
-
-  <%= render 'shared/error_messages', object: f.object %>
-  
-  <div class="field">
-    <%= f.text_field :name, placeholder: "Directory name" %>
+  <div id="fs_toolb" class="toolbar-icons" style="display: none;">
+    <%= render 'shared/tbbutton', name: "new_file", upath: "directories" %>
+	<%= render 'shared/tbbutton', name: "new_dir", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "edit_name", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "cut", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "copy", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "paste", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "delete", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "undo", upath: "directories/create" %>
+	<%= render 'shared/tbbutton', name: "redo", upath: "directories/create" %>
   </div>
-  <%= f.submit "Top", class: "btn" %>
-  <%= f.submit "Create", class: "btn  btn-primary" %>
-  <%= f.submit "Delete", class: "btn" %>
-  <%= f.submit "Change", class: "btn" %>
-
-<% end %>
-
+  
+  <div id="fs_notifiers" class="fs_notifiers" onclick="$(this).hide();" >
+    <div id="fs_notifier_cont" class="fs_notifier_cont">
+      
+    </div>
+    <p align="center" style="font-size:0.7em;">(click to dismiss)</p>
+  </div>
+  
+  <div class="directory_tree" id="directory_tree" style="height:20em;">
+    <%= nested_directories( @directories ) %>
+  </div>
+  
+  <script type="text/javascript">
+    $(function () {
+      fsInit();
+    });
+	$("a[id^=tb_]").click(function() {
+	  fsAction( this.id );
+	});
+  </script>
+  
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>

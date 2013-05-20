@@ -25,17 +25,23 @@ module DirectoriesHelper
   # -----------------------------------------------------------------------
   # 
   def nested_directories(directories)
-    if ( directories != nil )
-      directories.map do |dir_iter,sub_directories|
-        if ( dir_iter.name != nil )
-          render :partial => "shared/directory", 
-                 :locals => { 
-                    :directory => dir_iter, 
-                    :subdirectories => sub_directories 
-                 }
-        end
-      end.join.html_safe
+    if directories.nil?
+      return "" 
     end
+    a_ret = ""
+    directories.map do |diriter,subdirectories|
+      if diriter.nil? == false && diriter.name.nil? == false 
+        a_ret = a_ret + 
+             "<ul><li id=\"fs_edir_" + String(diriter.id) + "\" rel=\"directory\">\n" +
+             "<a class=\"directory-entry\" href=\"\">"+ 
+             diriter.name + "</a>\n"
+        if subdirectories.nil? == false
+          a_ret = a_ret + nested_directories(subdirectories)
+        end
+        a_ret = a_ret + "\n</li></ul>\n"
+      end
+    end
+    return a_ret.html_safe
   end
   # =======================================================================
   

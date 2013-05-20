@@ -1,0 +1,133 @@
+/*!
+ * Bootstrap v2.2.2
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * 
+ * File was modified by Nicu Tofan to fit the needs of the EquTree project
+ */
+
+[class^="eqticon_"],
+[class*=" eqticon_"] {
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url(image_path("fatcow-icons-24.png"));
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+margin-top: 9px;
+}
+
+/* White icons with optional class, or on hover/active states of certain elements */
+.eqticon_white,
+.nav-pills > .active > a > [class^="eqticon_"],
+.nav-pills > .active > a > [class*=" eqticon_"],
+.nav-list > .active > a > [class^="eqticon_"],
+.nav-list > .active > a > [class*=" eqticon_"],
+.navbar-inverse .nav > .active > a > [class^="eqticon_"],
+.navbar-inverse .nav > .active > a > [class*=" eqticon_"],
+.dropdown-menu > li > a:hover > [class^="eqticon_"],
+.dropdown-menu > li > a:hover > [class*=" eqticon_"],
+.dropdown-menu > .active > a > [class^="eqticon_"],
+.dropdown-menu > .active > a > [class*=" eqticon_"],
+.dropdown-submenu:hover > a > [class^="eqticon_"],
+.dropdown-submenu:hover > a > [class*=" eqticon_"] {
+  background-image: url(image_path('glyphicons-halflings-white.png'));
+}
+
+.eqticon_new_file {
+  background-position: 0      0;
+}
+.eqticon_new_dir {
+  background-position: -24px 0;
+}
+.eqticon_edit_name {
+  background-position: -48px 0;
+}
+.eqticon_cut {
+  background-position: -72px 0;
+}
+.eqticon_copy {
+  background-position: -96px 0;
+}
+.eqticon_paste {
+  background-position: -120px 0;
+}
+.eqticon_delete {
+  background-position: -144px 0;
+}
+.eqticon_undo {
+  background-position: -168px 0;
+}
+.eqticon_redo {
+  background-position: -192px 0;
+}
+.eqticon_th_large {
+  background-position: -216px 0;
+}
+.eqticon_home {
+  background-position: 0 -24px;
+}
+.eqticon_file {
+  background-position: -24px -24px;
+}
+.eqticon_time {
+  background-position: -48px -24px;
+}
+.eqticon_road {
+  background-position: -72px -24px;
+}
+.eqticon_download_alt {
+  background-position: -96px -24px;
+}
+.eqticon_download {
+  background-position: -120px -24px;
+}
+.eqticon_upload {
+  background-position: -144px -24px;
+}
+.eqticon_inbox {
+  background-position: -168px -24px;
+}
+.eqticon_play-circle {
+  background-position: -192px -24px;
+}
+.eqticon_repeat {
+  background-position: -216px -24px;
+}
+.eqticon_refresh {
+  background-position: -240px -24px;
+}
+.eqticon_list-alt {
+  background-position: -264px -24px;
+}
+.eqticon_lock {
+  background-position: -287px -24px;
+}
+.eqticon_flag {
+  background-position: -312px -24px;
+}
+.eqticon_headphones {
+  background-position: -336px -24px;
+}
+.eqticon_volume-off {
+  background-position: -360px -24px;
+}
+.eqticon_volume-down {
+  background-position: -384px -24px;
+}
+.eqticon_volume-up {
+  background-position: -408px -24px;
+}
+.eqticon_qrcode {
+  background-position: -432px -24px;
+}
+.eqticon_barcode {
+  background-position: -456px -24px;
+}

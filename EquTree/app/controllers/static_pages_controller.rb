@@ -30,7 +30,7 @@ class StaticPagesController < ApplicationController
     # have a directory ready if user decides to create one
     if signed_in?
       @directory = current_user.directories.build 
-      @directories = current_user.directories
+      @directories = current_user.directories.arrange(:order => :created_at)
     end
 
   end # def home

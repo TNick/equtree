@@ -4,7 +4,7 @@
 #  \date		May 2013
 #  \author		TNick
 #
-#  \brief		The controller for sessions
+#  \brief		The controller for user sheets
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,46 +19,44 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# the controller for sessions
-class SessionsController < ApplicationController
+# the controller for user sheets
+class SheetsController < ApplicationController
   
+
   # ----------------------------------------------------------------------
-  # Log in attempt
+  # only allow a signed in user to create or destroy
+  before_filter :signed_in_user
+
+  # only allow correct user to destroy
+  before_filter :correct_user,   only: :destroy
+  
+  # ======================================================================
+
+
+  # ----------------------------------------------------------------------
+  # Create the sheet
   def create
-
-    # locate the user in our database
-    user = User.find_by_email( params[:session][:email].downcase )
-
-    # if the user exists and the password matches
-    if user && user.authenticate( params[:session][:password] )
-
-      # Sign the user in and redirect to the user's show page.
-      sign_in user
-      redirect_back_or user
-
-    # invalid log-in; show log-in page again with an error
+    @parent_dir = params[:parentdir]
+    @sheet = @parent_dir.sheets.build( params[:sheet] )
+    if @sheet.save
+      flash[:success] = "Sheet created!"
+      redirect_to root_url
     else
-
-      flash.now[:error] = 'Invalid email/password combination'
-      render 'new'
-
+      render 'static_pages/home'
     end
-
   end # def create
   # ======================================================================
   
   # ----------------------------------------------------------------------
-  # signing out of a session; redirects to home page
+  # Remove an user
   def destroy
-
-    sign_out
-    redirect_to root_url 
-
+    @sheet.destroy
+    redirect_to root_url
   end # def destroy
   # ======================================================================
-  
-  
-end # class SessionsController
+
+
+end # class SheetsController
 
 #  CLASS    ===============================================================
 #

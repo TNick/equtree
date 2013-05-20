@@ -4,19 +4,7 @@
 #  \date		May 2013
 #  \author		TNick
 #
-#  \brief		RSpec Tests for Directory data model
-#
-# == Schema Information
-#
-# Table name: directories
-#
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  ancestry   :string(255)
-#
+#  \brief		RSpec Tests for static pages
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,79 +29,85 @@ require 'spec_helper'
 #  TESTS    --------------------------------------------------------------
 
 # ------------------------------------------------------------------------- 
-describe "Directory model" do
+describe "Static pages" do
   
-  let(:user) { FactoryGirl.create(:user) }
-  before do
-	# create a new, clean directory before each test
-	@directory = FactoryGirl.create(:directory, user: user)
-  end
-
-   
   # default target for future tests
-  subject { @directory }
+  subject { page }
   
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # check the fields
-  it { should respond_to( :name ) }
-  it { should respond_to( :user_id ) }
-  it { should respond_to( :user ) }
-  its(:user) { should == user }
-  it { should respond_to( :created_at ) }
-  it { should respond_to( :updated_at ) }
-  it { should respond_to( :ancestry ) }
-  it { should be_valid }
-  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "when user_id is invalid" do
-    before do
-      @directory.user_id = nil
-    end
-
-    it { should_not be_valid }
+  # common tests
+  shared_examples_for "all static pages" do
+	it { should have_content( 'EquTree' ) }
+    it { should have_selector( 'h1',    text: heading ) }
+    it { should have_selector( 'title', text: full_title(page_title ) ) }
   end
-  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "accessible attributes" do
-    it "should not allow access to user_id" do
-      expect do
-        Directory.new(user_id: user.id)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end    
-  end
-  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "name" do
+  describe "Home page" do
+	before { visit root_path }
 	
-	describe "empty" do
-	  before do
-		@directory.name = ""
-	  end
-	  it { should_not be_valid }
-	end
+    let(:heading)    { 'EquTree' }
+    let(:page_title) { '' }
+    
+    it_should_behave_like "all static pages"
+    it { should_not have_selector 'title', text: '| Home' }
+    
+  end # describe "Home page"
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
-	describe "longer than 50 characters" do
-	  before do
-		@directory.name = "a"*51
-	  end
-	  it { should_not be_valid }
-	end
-
-	describe "shorter than 50 characters" do
-	  before do
-		@directory.name = "a"*48
-	  end
-	  it { should be_valid }
-    end
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  describe "Contact page" do
+	before { visit contact_path }
+	
+	let(:heading)    { 'Contact' }
+    let(:page_title) { 'Contact' }
+	
+	it_should_behave_like "all static pages"
+            
   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
   
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  describe "Help page" do
+	before { visit help_path }
+	
+	let(:heading)    { 'Help' }
+    let(:page_title) { 'Help' }
+	
+	it_should_behave_like "all static pages"
+	
+  end
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
-end # describe "Directory model"
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  describe "About page" do
+	before { visit about_path }
+	
+	let(:heading)    { 'About' }
+    let(:page_title) { 'About' }
+	
+	it_should_behave_like "all static pages"
+  end
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  it "should have the right links on the layout" do
+    visit root_path
+    click_link "About"
+    page.should have_selector 'title', text: full_title('About Us')
+    click_link "Help"
+    page.should have_selector 'title', text: full_title('Help')
+    click_link "Contact"
+    page.should have_selector 'title', text: full_title('Contact')
+    click_link "Home"
+    click_link "Sign up now!"
+    page.should have_selector 'title', text: full_title('Sign up')
+    click_link "EquTree"
+    page.should have_selector 'title', text: full_title('')
+  end  
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
+end # describe "Static pages"
 # ========================================================================= 
 
 #  TESTS    ==============================================================

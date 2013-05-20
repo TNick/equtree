@@ -4,7 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		Presents a directory                                    -%>
+<%-#  \brief		Renders a button in the jsToolbar                       -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -19,16 +19,9 @@
 <%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
-
-<ul><li id="dir_leaf_<%= directory.id %>" >
-  <a class="directory-entry" 
-      href="">
-    <%= directory.name %>
-  </a>
-  <ul class="nested_directories">
-    <% nested_directories( subdirectories ) %>
-  </ul>
-</li></ul>
+<%-#= link_to raw("<i class=\"eqticon_#{name}\"></i>"), upath, remote: true, method: :post, id: "tb_#{name}" -%>
+	
+<a href="#" data-method="post" data-remote="true" id="tb_<%= name %>" rel="nofollow"><i class="eqticon_<%= name %>"></i></a>
 
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
