@@ -1,10 +1,10 @@
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
-#  \date		May 2013
-#  \author		TNick
+#  \date        May 2013
+#  \author      TNick
 #
-#  \brief		Code for a directory
+#  \brief       Code for a directory
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +32,7 @@
 #  updated_at   :datetime         not null
 #
 #
-class Sheet < ActiveRecord::Base
+class Formula < ActiveRecord::Base
   
   #
   #
@@ -49,10 +49,10 @@ class Sheet < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :description
+  attr_accessible :descr, :omath
   
-  # zero or more formulas in each sheet
-  has_many: formulas
+  # any formula is part of a sheet
+  belongs_to :sheet
   
   #  ATTRIBUTES    ========================================================
   #
@@ -62,6 +62,8 @@ class Sheet < ActiveRecord::Base
   #  VALIDATION    --------------------------------------------------------
 
 
+  # there must always be a name that is between 1 and 50 characters long
+  validates :omath,  presence: true
 
   #  VALIDATION    ========================================================
   #
@@ -77,21 +79,15 @@ class Sheet < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
-  # -----------------------------------------------------------------------
-  # convert the conent of this sheet to JSON
   def toJson
-    frm_ary = []
-    formulas.each do |formula|
-      frm_ary += formula.toJson()
-    end
     result = {
-          description: description
-          formulas: frm_ary
+        descr: descr,
+        omath: omath
       }
-    return result
+    
   end
-  # =======================================================================
-
+  
+  
 private
 
 

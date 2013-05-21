@@ -77,8 +77,8 @@ EquTree::Application.routes.draw do
   
   # ----------------------------------------------------------------------
   # create routes for files
-  resources :dfiles, only: [:act]
-  match 'file' => 'dfiles#act', :method => :post
+  #resources :dfiles, only: [:act]
+  match 'files' => 'dfiles#act', :method => :post
   
   #   HTTP Verb 	Path 		action 		used for
   #   ----------------------------------------------------

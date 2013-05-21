@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130520180006) do
+ActiveRecord::Schema.define(:version => 20130521174747) do
 
   create_table "dfiles", :force => true do |t|
     t.string   "name"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20130520180006) do
     t.integer  "ftype"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.integer  "type_index"
   end
 
   create_table "directories", :force => true do |t|
@@ -32,14 +33,18 @@ ActiveRecord::Schema.define(:version => 20130520180006) do
   add_index "directories", ["ancestry"], :name => "index_directories_on_ancestry"
   add_index "directories", ["user_id", "created_at"], :name => "index_directories_on_user_id_and_created_at"
 
-  create_table "sheets", :force => true do |t|
-    t.string   "name"
-    t.string   "directory_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+  create_table "formulas", :force => true do |t|
+    t.text     "omath"
+    t.text     "descr"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  add_index "sheets", ["directory_id", "created_at"], :name => "index_sheets_on_directory_id_and_created_at"
+  create_table "sheets", :force => true do |t|
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"

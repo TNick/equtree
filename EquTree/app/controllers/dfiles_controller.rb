@@ -1,5 +1,3 @@
-class DfilesController < ApplicationController
-end
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -22,7 +20,7 @@ end
 #  CLASS    ---------------------------------------------------------------
 
 # the controller for user directories
-class DirectoriesController < ApplicationController
+class DfilesController < ApplicationController
   respond_to :json
   
 
@@ -39,42 +37,42 @@ class DirectoriesController < ApplicationController
   def act
     
     d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "act action on dfiles controller"
     d params
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-    b  = false
-    case params[:action_id]
-    when 'new_file'
-      create_file
-      b = true
-    when 'new_dir'
-      create_directory
-      b = true
-    when 'edit_name' 
-      rename_fs_item
-      b = true
-    when 'cut'
-      a = 1 # TODO
-    when 'copy'
-      a = 1 # TODO
-    when 'paste'
-      a = 1 # TODO
-    when 'delete'
-      delete_fs_item
-      b = true
-    when 'undo'
-      a = 1 # TODO
-    when 'redo'
-      a = 1 # TODO
-    else # 
-      d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-      d "bad arguments"
-      d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-      render json: 'Unknown function', status: :unprocessable_entity and return
-    end
-    if b
-      return
-    end
+    err_str = ''
+    
+    begin # a one time loop to allow break
+      source_file_id = Integer( params[:source_file] ) rescue source_file = -1
+      source_file = Dfile.find_by_id( source_file_id )
+      if !source_file
+        err_str = 'Invalid file ID: #{source_file_id}'
+        break
+      end
       
+      case source_file.ftype
+      when Dfile::FTYPE_SHEET
+        sheet = Sheet.find_by_id( source_file.type_index )
+        if !sheet
+          err_str = 'Unknown file type'
+          break
+        end
+        
+        d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        d "good return; found sheet:"
+        d sheet
+        d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        render json: sheet.toJson(), status: 200 and return
+        
+      else
+        err_str = 'Unknown file type'
+        break
+      end
+    end until true # a one time loop to allow break
+    
+    render json: err_str, status: :unprocessable_entity and return
+    
+    
     d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     d "Not implemented"
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
@@ -94,7 +92,7 @@ private
   # ======================================================================
   
   
-end # class DirectoriesController
+end # class DfilesController
 
 #  CLASS    ===============================================================
 #

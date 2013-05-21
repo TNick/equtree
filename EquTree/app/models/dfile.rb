@@ -54,8 +54,10 @@ class Dfile < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name, :ftype
+  attr_accessible :name, :ftype, :type_index
   # :directory_id is not accesible
+  # type_index is the index of the file in its dedicated table
+  
 
   # any directory is part of an user
   belongs_to :directory
@@ -77,7 +79,12 @@ class Dfile < ActiveRecord::Base
 					:numericality => { 
 					  :greater_than => FTYPE_MIN, 
 					  :less_than => FTYPE_MAX }
-
+  
+  # always have a valid association to a file in proper table
+  validates :type_index, presence: true, 
+                    :numericality => { 
+                      :greater_than => 0 }
+  
   # always have an user
   validates :directory_id, 
                     presence: true
@@ -89,6 +96,16 @@ class Dfile < ActiveRecord::Base
   #
   #
   #  MODIFIERS    ---------------------------------------------------------
+
+  after_create :allocStorage
+  around_destroy :releaseStorage
+  
+  #  MODIFIERS    =========================================================
+  #
+  #
+  #
+  #
+  #  PUBLIC METHODS    ----------------------------------------------------
 
   # -----------------------------------------------------------------------
   # get the name of the type
@@ -104,7 +121,8 @@ class Dfile < ActiveRecord::Base
   end
   # =======================================================================
   
-  #  MODIFIERS    =========================================================
+
+  #  PUBLIC METHODS    ====================================================
   #
   #
   #
@@ -113,6 +131,51 @@ class Dfile < ActiveRecord::Base
 
 private
 
+  # -----------------------------------------------------------------------
+  def allocStorage
+    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "allocate storage for file"
+    d id
+    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+    case ftype
+    when FTYPE_SHEET
+      sheet = Sheet.build()
+      type_index = sheet.id
+      d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      d "allocStorage: math sheet"
+      d sheet
+      d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+    else
+      type_index = -1
+    end
+    
+  end
+  # =======================================================================
+  
+  # -----------------------------------------------------------------------
+  def releaseStorage
+    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "release storage for file"
+    d id
+    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    
+    case ftype
+    when FTYPE_SHEET
+      sheet = Sheet.find_by_id(type_index)
+      if ( sheet )
+        d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        d "releaseStorage: math sheet"
+        d sheet
+        d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        # sheet.decRef()
+        sheet.destroy
+      end
+    else
+      type_index = -1
+    end
+    
+  end
+  # =======================================================================
 
   #  PRIVATE HELPERS    ===================================================
   #
