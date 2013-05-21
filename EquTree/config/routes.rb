@@ -13,6 +13,14 @@
 # Please read COPYING and README files in root folder
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
+# get    "widgets"          => "widgets#index",   :as => 'widgets'
+# get    "widgets/:id"      => "widgets#show",    :as => 'widget'
+# get    "widgets/new"      => "widgets#new",     :as => 'new_widget'
+# post   "widgets"          => "widgets#create",  :as => 'widgets'
+# get    "widgets/:id/edit" => "widgets#edit",    :as => 'edit_widget'
+# put    "widgets/:id"      => "widgets#update",  :as => 'widget'
+# delete "widgets/:id"      => "widgets#destroy", :as => 'widget'
+#
 # ------------------------------------------------------------------------- 
 # ========================================================================= 
 #
@@ -58,16 +66,26 @@ EquTree::Application.routes.draw do
   
   # ----------------------------------------------------------------------
   # create routes for directories
-  resources :directories, only: [:create, :destroy]
+  resources :directories, only: [:create] # , :destroy
   
   #   HTTP Verb 	Path 		action 		used for
   #   ----------------------------------------------------
-  #   POST 			/directory 		create 		create the new directory
-  #   DELETE 		/directory 		destroy 	delete the directory resource 
+  #   POST 			/directory 	create 		create the new directory
+  #   DELETE 		/directory 	destroy 	delete the directory resource 
+  
+  # ======================================================================
+  
+  # ----------------------------------------------------------------------
+  # create routes for files
+  resources :dfiles, only: [:act]
+  match 'file' => 'dfiles#act', :method => :post
+  
+  #   HTTP Verb 	Path 		action 		used for
+  #   ----------------------------------------------------
+  #   POST 			/file 		act 		all actions
   
   # ======================================================================
 
-    
   # ----------------------------------------------------------------------
   # both default and /home go to our home page
 

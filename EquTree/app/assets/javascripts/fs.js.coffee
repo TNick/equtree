@@ -94,58 +94,140 @@ FSTYPE =
           functions:
             's' : -> console.log "fuck"
       
-    plugins: ['themes', 'html_data', 'ui', 'hotkeys', 'types'] # 'crrm',
-  a = 0 / 0
-
-  jQuery('#directory_tree').bind 'keypress', (event) -> 
-    console.log  event.which
-  $('#directory_tree').on 'keyup', (event) -> 
-    console.log  event.which    
-
-  jQuery('#directory_tree').bind 'rename_node.jstree', (event, data) -> 
-    if dt.changing_name is true
-      return
-    dt.changing_name = true
-    sel_id = data.rslt.obj.attr('id')
-    sel_kind = fsIdKind sel_id
-    ajax_data =
-      action_id: 'edit_name'
-      name: data.rslt.name
-      sel_id: sel_kind[1]
-      sel_kind: sel_kind[0]
-      move_ty: ''
-      other_id: -1
-      ftype: 2 # Dfile::FTYPE_SHEET to create TODO from node
-    fsSendAjax dt, ajax_data
-    dt.changing_name = false
-    # TODO find a way to set the name back to its original value
-    #dt.jstree( 'rename_node', data.rslt.obj, data.rslt.obj.text().replace(data.rslt.name,'').trim()  )
-
-  jQuery('#directory_tree').bind 'delete_node.jstree', (event, data) -> 
-    if dt.deleting_node is true
-      return
-    if not confirm( 'Are you sure you want to delete the item?' )
-        return
-    dt.deleting_node = true
-    sel_id = data.rslt.obj.attr('id')
-    sel_kind = fsIdKind sel_id
-    ajax_data =
-      action_id: 'delete'
-      name: data.rslt.name
-      sel_id: sel_kind[1]
-      sel_kind: sel_kind[0]
-      move_ty: ''
-      other_id: -1
-      ftype: 2 # Dfile::FTYPE_SHEET to create 
-    fsSendAjax dt, ajax_data
-    dt.deleting_node = false
-    # TODO find a way to prevent the delete TODO from node
-
+    plugins: ['themes', 'html_data', 'ui', 'hotkeys', 'eqcrrm', 'types']
 
   setTimeout (->
     dt.jstree 'set_focus'
   ), 100
   
+  jQuery('#directory_tree').bind 'select_node.jstree', (event, data) -> 
+    sel_id = data.rslt.obj.attr("id");
+    sel_kind = fsIdKind sel_id # [0] - FSTYPE, [1] - index of that item
+    jQuery('#fs_content_dir').hide()
+    jQuery('#fs_content_file').hide()
+    jQuery('#fs_content_dir').empty()
+    jQuery('#fs_content_file').empty()
+    if ( sel_kind[0] is  FSTYPE.INVALID )
+      jQuery('#fs_content_header').innerHTML = "No selection"
+    else
+      jQuery('#fs_content_header').text( dt.jstree( 'get_text', data.rslt.obj ) )
+      if ( sel_kind[0] == FSTYPE.DIR )
+        jQuery('#fs_content_dir').show()
+        allChildren = jQuery('#' + sel_id).children('ul').children('li')
+        i = 0
+        while i < allChildren.length
+          $("#fs_content_dir").append("<div>" + dt.jstree( 'get_text', allChildren[i] ) + "</div>")
+          i++
+      else
+        #file_type = jQuery('#' + sel_id).attr('rel')
+        fsGetFileContent sel_kind[1]
+        jQuery('#fs_content_file').show()
+        
+
+  # jQuery('#directory_tree').bind 'rename_node.jstree', (event, data) -> 
+    # if dt.changing_name is true
+      # return
+    # dt.changing_name = true
+    # sel_id = data.rslt.obj.attr('id')
+    # sel_kind = fsIdKind sel_id
+    # ajax_data =
+      # action_id: 'edit_name'
+      # name: data.rslt.name
+      # sel_id: sel_kind[1]
+      # sel_kind: sel_kind[0]
+      # move_ty: ''
+      # other_id: -1
+      # ftype: 2 # Dfile::FTYPE_SHEET to create TODO from node
+    # fsSendAjax dt, ajax_data
+    # dt.changing_name = false
+    #TODO find a way to set the name back to its original value
+    #dt.jstree( 'rename_node', data.rslt.obj, data.rslt.obj.text().replace(data.rslt.name,'').trim()  )
+
+  # jQuery('#directory_tree').bind 'delete_node.jstree', (event, data) -> 
+    # if dt.deleting_node is true
+      # return
+    # dt.deleting_node = true
+    # sel_id = data.rslt.obj.attr('id')
+    # sel_kind = fsIdKind sel_id
+    # ajax_data =
+      # action_id: 'delete'
+      # name: data.rslt.name
+      # sel_id: sel_kind[1]
+      # sel_kind: sel_kind[0]
+      # move_ty: ''
+      # other_id: -1
+      # ftype: 2 # Dfile::FTYPE_SHEET to create 
+    # fsSendAjax dt, ajax_data
+    # dt.deleting_node = false
+    # TODO find a way to prevent the delete TODO from node
+
+
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+fsFileNotif = (text) ->
+  div_cnt = $('#fs_content_notifier')[0]
+  div_cnt.innerHTML = text
+  div_cnt.style.color = 'blue'
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+fsFileErr = (text) ->
+  div_cnt = $('#fs_content_notifier')[0]
+  div_cnt.innerHTML = text
+  div_cnt.style.color = 'red'
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+fsClearFileErr = (text) ->
+  div_cnt = $('#fs_content_notifier')[0]
+  div_cnt.innerHTML = ''
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+fsGetFileContent = (file_id) ->
+  fsClearFileErr()
+  
+  ajax_data = 
+    source_file: file_id
+    
+  jqxhr = $.ajax(
+    type: 'POST'
+    url: 'files'
+    dataType: "json"
+    data: ajax_data
+  ).done( (data) ->
+    
+    if data.source_file is not file_id 
+      fsFileErr 'Bogus response from the server'
+    else
+      switch data.file_type
+        when 'mathsheet'
+          fsRender_MathSheet(file_id,data)
+        else
+          fsFileErr("Unknown file type: " + data.file_type )
+      # TODO check if the type of the file changed on the server
+      # and change icon appropriatelly
+  ).fail(->
+    fsFileErr 'Server querry failed.<br>' + 
+      jqxhr.responseText + '.<br>' + 
+      'status: ' + jqxhr.statusText
+  )
+  # #fs_content_file
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+fsRender_MathSheet = (tree_node,file_id) ->
+  
+  if data.file_type != 'mathsheet'
+    fsFileErr("Wrong file type: : " + data.file_type )
+    return
+  
+  top_div = jQuery('#fs_content_file')
+  
+  
+
+
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
@@ -291,7 +373,15 @@ fsSendAjax = (dt,ajax_data) ->
         dt.deleting_node = true
         dt.jstree( 'delete_node', new_tag, data.new_name )
         dt.deleting_node = false
-        
+  ).fail(->
+    fsError 'Server querry failed.<br>' + 
+      jqxhr.responseText + '.<br>' + 
+      'status: ' + jqxhr.statusText
+      
+    console.log 
+  )
+
+          
         #       when 'cut'
         #         
         #       when 'copy'
@@ -305,14 +395,6 @@ fsSendAjax = (dt,ajax_data) ->
         #       else
         #         
     
-  ).fail(->
-    fsError 'Can`t create directory ' + ajax_data.name + '.<br>' + 
-      jqxhr.responseText + '.<br>' + 
-      'status: ' + jqxhr.statusText
-      
-    console.log 
-  )
-
 #.always(function() { alert('finished'); });
 # ========================================================================= 
 
@@ -364,8 +446,12 @@ fsSendAjax = (dt,ajax_data) ->
       if not fsClipboardPaste(sel_id,other_id,move_type)
         return
     when 'delete'
-      if not confirm( 'Are you sure you want to delete the item?' )
+      if sel_kind[0] is FSTYPE.INVALID
+        fsError 'No item to delete.'
         return
+      else
+        if not confirm( 'Are you sure you want to delete the item?' )
+          return
     when 'undo', 'redo'
       # move along
     else
@@ -383,6 +469,8 @@ fsSendAjax = (dt,ajax_data) ->
   fsSendAjax dt, ajax_data
 
 # ========================================================================= 
+
+# TODO there is a second POST response with entire page. Why?
 
 #  FUNCTIONS    =========================================================== 
 #

@@ -21,7 +21,7 @@
 
 # the controller for static pages
 class StaticPagesController < ApplicationController
-  
+  respond_to :html
 
   # ----------------------------------------------------------------------
   # Home page

@@ -90,10 +90,10 @@ class DirectoriesController < ApplicationController
   
   # ----------------------------------------------------------------------
   # Remove a directory
-  def destroy
-    @directory.destroy
-    redirect_to root_url
-  end # def destroy
+  #def destroy
+  #  @directory.destroy
+  #  redirect_to root_url
+  #end # def destroy
   # ======================================================================
 
 private

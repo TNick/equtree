@@ -4,7 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		This is the home page for the site                      -%>
+<%-#  \brief		Partial view for user                                   -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -17,68 +17,20 @@
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
-<%-#  SIGNED IN    -------------------------------------------------------- -%>
-
-<% if signed_in? %>
-
-  <div class="row">
-
-    <%-# ................................................. -%>
-    <aside class="span4">
-      <section>
-        <%= render 'shared/user_info' %>
-      </section>
-      <section>
-        <%= render 'shared/stats' %>
-      </section>
-      <section>
-        <%= render 'shared/directory_form' %>
-      </section>
-    </aside>
-    <%-# ................................................. -%>
-
-    <%-# ................................................. -%>
-    <div class="span8">
-      <%= render 'shared/main_content' %>
-    </div>
-    <%-# ................................................. -%>
-  </div>  
+<%-#  CONTENT    ---------------------------------------------------------- -%>
   
-<%-#  SIGNED IN    ======================================================== -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#  NOT SIGNED IN    ---------------------------------------------------- -%>
+<h3 id="fs_content_header" class="fs_content_header">No selection</h3>
+<div id="fs_content_notifier" class="fs_content_notifier">
+  No selection
+</div>
+<div id="fs_content_dir" class="fs_content_dir">
+  Content of the directory
+</div>
+<div id="fs_content_file" class="fs_content_file">
+  Content of the file
+</div>
 
-<% else %>
-
-
-  <div class="center hero-unit">
-
-
-    <h1>Welcome to the EquTree</h1>
-
-
-    <h2>
-      This is the home page for the EquTree project...
-    </h2>
-
-
-
-    <%= link_to "Sign up now!", signup_path, 
-                                class: "btn btn-large btn-primary" %>
-
-
-  </div>
-
-
-  <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>
-
-
-<% end %> 
-  
-<%-#  NOT SIGNED IN    ==================================================== -%>
+<%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
