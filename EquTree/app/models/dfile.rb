@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: dfiles
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)
+#  directory_id :integer
+#  ftype        :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  type_index   :integer
+#
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -15,7 +28,7 @@
 # ========================================================================= 
 #
 #
-#
+# 
 #
 #  CLASS    ---------------------------------------------------------------
 
@@ -33,6 +46,8 @@
 #
 #
 class Dfile < ActiveRecord::Base
+  before_create :allocStorage
+  around_destroy :releaseStorage
   
   #
   #
@@ -58,13 +73,13 @@ class Dfile < ActiveRecord::Base
   # :directory_id is not accesible
   # type_index is the index of the file in its dedicated table
   
-
+ 
   # any directory is part of an user
   belongs_to :directory
   
   
   #  ATTRIBUTES    ========================================================
-  #
+  # 
   #
   #
   #
@@ -81,9 +96,9 @@ class Dfile < ActiveRecord::Base
 					  :less_than => FTYPE_MAX }
   
   # always have a valid association to a file in proper table
-  validates :type_index, presence: true, 
-                    :numericality => { 
-                      :greater_than => 0 }
+  #validates :type_index, presence: true # , 
+                    #:numericality => { 
+                    #  :greater_than => 0 }
   
   # always have an user
   validates :directory_id, 
@@ -97,8 +112,7 @@ class Dfile < ActiveRecord::Base
   #
   #  MODIFIERS    ---------------------------------------------------------
 
-  after_create :allocStorage
-  around_destroy :releaseStorage
+
   
   #  MODIFIERS    =========================================================
   #
@@ -121,6 +135,19 @@ class Dfile < ActiveRecord::Base
   end
   # =======================================================================
   
+  # -----------------------------------------------------------------------
+  # checks if this file is of sheet type; if so, returns the sheet, 
+  # otherwise returns error
+  def getSheet
+    case ftype
+    when FTYPE_SHEET
+      return Sheet.find_by_id(type_index)
+    else # 
+      return nil
+    end
+  end
+  # =======================================================================
+ 
 
   #  PUBLIC METHODS    ====================================================
   #
@@ -133,45 +160,42 @@ private
 
   # -----------------------------------------------------------------------
   def allocStorage
-    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    d "allocate storage for file"
-    d id
-    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
-    case ftype
+    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    # d "allocate storage for file"
+    # d id
+    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+    case self.ftype
     when FTYPE_SHEET
-      sheet = Sheet.build()
-      type_index = sheet.id
-      d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-      d "allocStorage: math sheet"
-      d sheet
-      d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+      sheet = Sheet.create()
+      self.type_index = sheet.id
+      # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      # d "allocStorage: math sheet"
+      # d sheet
+      # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
     else
-      type_index = -1
+      self.type_index = -1
     end
-    
   end
   # =======================================================================
   
   # -----------------------------------------------------------------------
   def releaseStorage
-    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    d "release storage for file"
-    d id
-    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    # d "release storage for file"
+    # d id
+    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
     
-    case ftype
+    case self.ftype
     when FTYPE_SHEET
-      sheet = Sheet.find_by_id(type_index)
+      sheet = Sheet.find_by_id(self.type_index)
       if ( sheet )
-        d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-        d "releaseStorage: math sheet"
-        d sheet
-        d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        # d "releaseStorage: math sheet"
+        # d sheet
+        # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
         # sheet.decRef()
         sheet.destroy
       end
-    else
-      type_index = -1
     end
     
   end

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: dfiles
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)
+#  directory_id :integer
+#  ftype        :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  type_index   :integer
+#
+
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:

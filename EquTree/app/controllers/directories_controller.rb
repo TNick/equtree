@@ -142,7 +142,7 @@ private
     end
     d parent_dir
     d parent_dir.dfiles
-    @dfile = parent_dir.dfiles.build(
+    @dfile = parent_dir.dfiles.create(
       name: params[:name],
       ftype: params[:ftype]
     )
@@ -150,8 +150,7 @@ private
     if !@dfile
       render json: @dfile.errors, :layout => false, 
           status: :unprocessable_entity and return
-    end
-    if @dfile.save
+    else
       reponse = { action_id: params[:action_id],
                   new_id: @dfile.id,
                   new_name: @dfile.name,
@@ -159,11 +158,30 @@ private
                   kind_name: @dfile.typeName()
                 }
       render :json => reponse, :layout => false, :status => 200 and return
-    else
-      render json: @dfile.errors, :layout => false, 
-          status: :unprocessable_entity and return
     end
     
+    
+    # @dfile = parent_dir.dfiles.build(
+      # name: params[:name],
+      # ftype: params[:ftype]
+    # )
+    # d @dfile
+    # if !@dfile
+      # render json: @dfile.errors, :layout => false, 
+          # status: :unprocessable_entity and return
+    # end
+    # if @dfile.save
+      # reponse = { action_id: params[:action_id],
+                  # new_id: @dfile.id,
+                  # new_name: @dfile.name,
+                  # parent_id: @dfile.directory_id,
+                  # kind_name: @dfile.typeName()
+                # }
+      # render :json => reponse, :layout => false, :status => 200 and return
+    # else
+      # render json: @dfile.errors, :layout => false, 
+          # status: :unprocessable_entity and return
+    # end
 
   end # def create_file
   # ======================================================================

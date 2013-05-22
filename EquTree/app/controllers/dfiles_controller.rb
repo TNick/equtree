@@ -62,7 +62,7 @@ class DfilesController < ApplicationController
         d "good return; found sheet:"
         d sheet
         d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
-        render json: sheet.toJson(), status: 200 and return
+        render json: sheet.toJSON(), status: 200 and return
         
       else
         err_str = 'Unknown file type'

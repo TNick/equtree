@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130521174747) do
+ActiveRecord::Schema.define(:version => 20130522071242) do
 
   create_table "dfiles", :force => true do |t|
     t.string   "name"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20130521174747) do
     t.text     "descr"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "sheet_id"
   end
 
   create_table "sheets", :force => true do |t|

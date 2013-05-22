@@ -23,14 +23,14 @@
 #
 # == Schema Information
 #
-# Table name: sheets
+# Table name: formulas
 #
-#  id           :integer          not null, primary key
-#  name         :string(255)
-#  directory_id :string(255)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
+#  id         :integer          not null, primary key
+#  omath      :text
+#  descr      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  sheet_id   :integer          not null
 #
 class Formula < ActiveRecord::Base
   
@@ -79,7 +79,7 @@ class Formula < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
-  def toJson
+  def toJSON
     result = {
         descr: descr,
         omath: omath

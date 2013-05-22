@@ -1,3 +1,5 @@
+
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -25,12 +27,10 @@
 #
 # Table name: sheets
 #
-#  id           :integer          not null, primary key
-#  name         :string(255)
-#  directory_id :string(255)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
+#  id          :integer          not null, primary key
+#  description :text
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 class Sheet < ActiveRecord::Base
   
@@ -52,7 +52,7 @@ class Sheet < ActiveRecord::Base
   attr_accessible :description
   
   # zero or more formulas in each sheet
-  has_many: formulas
+  has_many :formulas
   
   #  ATTRIBUTES    ========================================================
   #
@@ -79,14 +79,15 @@ class Sheet < ActiveRecord::Base
 
   # -----------------------------------------------------------------------
   # convert the conent of this sheet to JSON
-  def toJson
+  def toJSON
     frm_ary = []
     formulas.each do |formula|
-      frm_ary += formula.toJson()
+      frm_ary += formula.toJSON()
     end
     result = {
-          description: description
-          formulas: frm_ary
+          description: description,
+          formulas: frm_ary,
+          file_type: 'mathsheet'
       }
     return result
   end

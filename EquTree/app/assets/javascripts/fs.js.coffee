@@ -217,7 +217,7 @@ fsGetFileContent = (file_id) ->
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
-fsRender_MathSheet = (tree_node,file_id) ->
+fsRender_MathSheet = (file_id,data) ->
   
   if data.file_type != 'mathsheet'
     fsFileErr("Wrong file type: : " + data.file_type )
@@ -225,7 +225,7 @@ fsRender_MathSheet = (tree_node,file_id) ->
   
   top_div = jQuery('#fs_content_file')
   
-  
+  console.log data
 
 
 # ========================================================================= 

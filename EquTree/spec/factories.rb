@@ -19,7 +19,7 @@
 #
 #  FUNCTIONS    -----------------------------------------------------------
 FactoryGirl.define do
-  
+   
   # -----------------------------------------------------------------------
   # create an entry of User kind
   factory :user do
@@ -51,9 +51,30 @@ FactoryGirl.define do
   factory :dfile do
   
     sequence(:name)		{ |n| "File #{n}" }
-	type				Dfile::FTYPE_TEST
+	ftype				Dfile::FTYPE_TEST
+    type_index          -1
     directory
 	
+  end
+  # =======================================================================
+
+  # -----------------------------------------------------------------------
+  # create an entry of Sheet kind
+  factory :sheet do
+  
+    sequence(:description)		{ |n| "Description #{n}" }
+	
+  end
+  # =======================================================================
+
+  # -----------------------------------------------------------------------
+  # create an entry of Formula kind
+  factory :formula do
+  
+    sequence(:descr)		{ |n| "Description #{n}" }
+	sequence(:omath)		{ |n| "Omath #{n}" }
+    sheet
+    
   end
   # =======================================================================
 
