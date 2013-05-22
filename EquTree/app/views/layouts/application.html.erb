@@ -41,8 +41,11 @@
     <%= stylesheet_link_tag    "application", media: "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
-    
-    
+    <script type="text/javascript"
+      <%= src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> -%>
+      src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
     <%-# some vendor specific set-up to emulate HTML5 -%>
     <%= render 'layouts/shim' %>  
     
