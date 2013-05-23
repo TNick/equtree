@@ -56,7 +56,9 @@ FSTYPE =
   # Define any icon actions before calling the toolbar 
   $('.toolbar-icons a').on 'click', (event) ->
     event.preventDefault()
-
+  $("a[id^=tb_]").click( ->
+    fsAction( this.id );
+  )
   
   # hide the event nofifier
   $('#fs_notifiers').hide()

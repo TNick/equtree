@@ -28,22 +28,27 @@
 </div>
 <div id="fs_content_file" class="fs_content_file">
   <div id="fs_file_zone" class="fs_file_zone">
-    Content of the file
-    <div class="equation">equ</div>
+    <div class="equation" id="equation_99">equ</div>
 
   </div>
-  <textarea id="equation_text" rows="4" cols="50">
-    At w3schools.com you will learn how to make a website. We offer free 
-    tutorials in all web development technologies.
-  </textarea> 
+  <textarea id="equation_text" rows="4" cols="50"></textarea> 
 </div>
 
 
+  <div id="sheet_toolb" class="toolbar-icons" style="display: none;">
+    <a href="#" id="tbsheet_create_new"><i class="eqticon_new_file"></i></a>
+    <a href="#" id="tbsheet_update"><i class="eqticon_new_file"></i></a>
 
-<script>
-$(function () {
-  afterSheetLoad();
-});
+
+  </div>
+
+  <script type="text/javascript">
+    $(function () {
+      sheetInit();
+    });
+  </script>
+
+
 </script>
 
 <%-#  CONTENT    ========================================================== -%>
