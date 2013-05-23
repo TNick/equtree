@@ -27,14 +27,24 @@
   Content of the directory
 </div>
 <div id="fs_content_file" class="fs_content_file">
-  Content of the file
-  <div class="equation">equ</div>
-  <script>
-    $(function () {
-      dfile_make_draggable();
-    });
-  </script>
+  <div id="fs_file_zone" class="fs_file_zone">
+    Content of the file
+    <div class="equation">equ</div>
+
+  </div>
+  <textarea id="equation_text" rows="4" cols="50">
+    At w3schools.com you will learn how to make a website. We offer free 
+    tutorials in all web development technologies.
+  </textarea> 
 </div>
+
+
+
+<script>
+$(function () {
+  afterSheetLoad();
+});
+</script>
 
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
