@@ -1,3 +1,21 @@
 // Place all the styles related to the Dfiles controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.fs_content_file {
+    display: inline-block;
+    width: 100%;
+    height: 25em;
+    overflow: auto;
+    background-image:url(image_path('sheet-back.png'));
+}
+.equation {
+    float: left;
+    background: black;
+    color: white;
+    width: 100px;
+    margin: 10px;
+    text-align: center;
+    vertical-align: middle;
+    //line-height: 100px;
+}
