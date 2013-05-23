@@ -18,7 +18,37 @@
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
-  
+
+
+<script type="text/javascript">
+  <%-# src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> -%>
+  <%-# src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe"> -%>
+
+    (function () {
+      var script;
+      var head = document.getElementsByTagName("head")[0];
+      
+      script = document.createElement("script");
+      script.type = "text/x-mathjax-config";
+      script[(window.opera ? "innerHTML" : "text")] =
+          "MathJax.Hub.Config({\n" +
+          "  tex2jax: { " + 
+          "    inlineMath: [ ['$$[',']$$'] ], " + 
+          "    displayMath: [ ['$${','}$$'] ] " +
+          "  },\n" +
+          "  core: { " + 
+          "    elements: [ 'fs_content_file' ] " + 
+          "  }\n" +
+          "});"
+      head.appendChild(script);
+      
+      script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe";
+      head.appendChild(script);
+    })();
+</script>
+
 <h3 id="fs_content_header" class="fs_content_header">No selection</h3>
 <div id="fs_content_notifier" class="fs_content_notifier">
   No selection
@@ -27,7 +57,10 @@
   Content of the directory
 </div>
 <div id="fs_content_file" class="fs_content_file">
-  Content of the file
+
+  When $$[a \ne 0]$$, there are two solutions to $$[ax^2 + bx + c = 0]$$ and they are
+$${x = {-b \pm \sqrt{b^2-4ac} \over 2a}.}$$
+
 </div>
 
 <%-#  CONTENT    ========================================================== -%>
