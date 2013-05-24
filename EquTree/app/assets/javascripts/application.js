@@ -16,3 +16,4 @@
 //= require bootstrap
 //= require_tree .
 //= require_toolbar .
+//= require_tree ../../../vendor/assets/javascripts/.
