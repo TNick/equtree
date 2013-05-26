@@ -119,7 +119,7 @@ presentMessage = (message,msg_type,clear_previous) ->
   )
 
   # only for testing
-  msgError('test')
+  # msgError('test')
   
 # ========================================================================= 
 

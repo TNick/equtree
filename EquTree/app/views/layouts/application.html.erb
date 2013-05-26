@@ -63,19 +63,28 @@
   
     <%-# common header -%>
 	<%= render 'layouts/header' %>
-	
-
+      
+    <%-# message panel -%>
+    <%= render 'shared/message' %>
+    
+    <%-# Temporary messages get presented in this space -%>
+    <script type="text/javascript">
+      $(function () {
+          <% flash.each do |key, value| %>
+            <% if ( key == :error ) %>
+              msgError("<%= value %>",false);
+            <% else %>
+              msgInfo("<%= value %>",false);
+            <% end %>
+            <!--%= content_tag( :div, value, class: "alert alert-#{key}" ) %-->
+          <% end %>
+      });
+    </script>
+    
+    
 	<%-# container div for the rest of the page - class="container"-%>
     <div class="below_header">
-    
-      <%-# Temporary messages get presented in this space -%>
-	  <% flash.each do |key, value| %>        
-        <%= content_tag( :div, value, class: "alert alert-#{key}" ) %>
-      <% end %>
-      
-      <%-# message panel -%>
-      <%= render 'shared/message' %>
-      
+
       <%-# Actual content of the page -%>
       <%= yield %>
       
