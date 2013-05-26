@@ -19,44 +19,80 @@
 <%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
   
-<h3 id="fs_content_header" class="fs_content_header">No selection</h3>
-<div id="fs_content_notifier" class="fs_content_notifier">
+<!--h3 id="fs_content_header" class="fs_content_header">No selection</h3-->
+<!--div id="fs_content_notifier" class="fs_content_notifier">
   No selection
-</div>
+</div-->
 <div id="fs_content_dir" class="fs_content_dir">
   Content of the directory
 </div>
-<div id="fs_content_file" class="fs_content_file">
+<!--div id="fs_content_file" class="fs_content_file"-->
   <div id="fs_file_zone" class="fs_file_zone">
-    <div class="equation" id="equation_98">equ1</div>
-    <div class="equation" id="equation_99">equ2</div>
+    <div class="expression" id="expression_98">equ1</div>
+    <div class="expression" id="expression_99">equ2</div>
 
-<!--svg class="equpath" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<!--svg class="exprpath" xmlns="http://www.w3.org/2000/svg" version="1.1">
   <path d="M 175 200 l 150 0" stroke="green" stroke-width="3"
   fill="none" />
 </svg--> 
     
     
   </div>
-  <textarea id="equation_text" rows="4" cols="50"></textarea> 
-</div>
+  
+<!--/div-->
 
 
   <div id="sheet_toolb" class="toolbar-icons" style="display: none;">
     <a href="#" id="tbsheet_create_new"><i class="eqticon_new_file"></i></a>
     <a href="#" id="tbsheet_update"><i class="eqticon_new_file"></i></a>
     <a href="#" id="tbsheet_connect"><i class="eqticon_new_file"></i></a>
+    <a href="#" id="tbsheet_context"><i class="eqticon_new_file"></i></a>
     
   </div>
 
-  <script type="text/javascript">
-    $(function () {
-      sheetInit();
-    });
-  </script>
 
+  <div class="bottom_menu">
+    <%= render 'shared/bottombutton', name: "explore" %>
+    <%= render 'shared/bottombutton', name: "content" %>
+    
+    <span style="float:right;">&nbsp;</span>
+    <span style="float:right;" class="fs_content_header" id="fs_content_header">No selection</span>
+    <span style="float:right;">&nbsp;</span>
+  </div>
 
+  <div class='toolpanel' id='toolp_explore'>
+      <section>
+        <h1>
+          <%= gravatar_for @user %>
+          <%= @user.name %>
+        </h1>
+      </section>
+      <section>
+        <%= render 'shared/stats' %>
+      </section>
+      <section>
+        <%= render 'shared/directory_form' %>
+      </section>
+  </div>
+
+  <div class='toolpanel' id='toolp_content'>
+    Test content stat
+    <textarea id="expression_text" rows="4" cols="50"></textarea> 
+  </div>
+
+<script type="text/javascript">
+  $(function () {
+    sheetInit();
+    bottomBtnInit();
+    toolpanelInit();
+  });
 </script>
+
+
+
+
+
+
 
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>

@@ -36,12 +36,14 @@
       <%= full_title(yield(:title)) %>
     </title>
     
-    
+    <!--link rel="stylesheet" type="text/css" 
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/cupertino/jquery-ui.css" /-->
     <%-# standard components: stylesheets, javascript, ... -%>
     <%= stylesheet_link_tag    "application", media: "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
 
     <%-# some vendor specific set-up to emulate HTML5 -%>
     <%= render 'layouts/shim' %>  
@@ -62,10 +64,9 @@
     <%-# common header -%>
 	<%= render 'layouts/header' %>
 	
-	
-	<%-# container div for the rest of the page -%>
-    <div class="container">
-    
+
+	<%-# container div for the rest of the page - class="container"-%>
+    <div class="below_header">
     
       <%-# Temporary messages get presented in this space -%>
 	  <% flash.each do |key, value| %>        
@@ -82,11 +83,10 @@
 	  
 	  
 	  <%-# debug information only visible in development environment -%>
-	  <%= debug(params) if Rails.env.development? %>
+	  <!--%= debug(params) if Rails.env.development? %-->
 	  
 	  
     </div>
-    
     
   </body>
   

@@ -1,51 +1,154 @@
-// Place all the styles related to the Dfiles controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/* ========================================================================= */
+/* ------------------------------------------------------------------------- */
+/*
+  \file         dfiles.css.scss
+  \date         Apr 2013
+  \author       TNick
 
+  \brief        Styles for files related components
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Please read COPYING and README files in root folder
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+/* ------------------------------------------------------------------------- */
+/* ========================================================================= */
+//
+//
+//
+//
+/*  INCLUDES    ------------------------------------------------------------ */
+
+@import "bootstrap";
+@import "defines";
+
+/*  INCLUDES    ============================================================ */
+//
+//
+//
+//
+/*  DEFINITIONS    --------------------------------------------------------- */
+
+// color for the shadow of current element
+$crtElShadow: #0000ff;
+
+// color for the shadow of a selected element
+$selElShadow: #ff0000;
+
+
+/*  DEFINITIONS    ========================================================= */
+//
+//
+//
+//
+/*  CLASSES    ------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------- */
+/* area for file content; this groups both actual file content
+ * (see fs_file_zone below) and other related elements
+ * 
+ * This element has been disabled for now
+ */
 .fs_content_file {
-    display: inline-block;
+    display: block;
     width: 100%;
+    overflow:none;
 }
+/* ========================================================================= */
 
+/* ------------------------------------------------------------------------- */
+/* part of the file content area that actually presents file content */
 .fs_file_zone {
     display: inline-block;
+    // take entire width
     width: 100%;
-    height: 25em;
-    overflow: auto;
+    height: 30em;
+    // shoiw scroll bars when necessary
+    overflow-x: auto;
+    overflow-y: hidden;
+    // some fancy background
     background-image:url(image_path('sheet-back.png'));
+    border: 1px solid black;
 }
+/* ========================================================================= */
 
-.equation {
+/* ------------------------------------------------------------------------- */
+/* class for the div representing an expression */
+.expression {
     position: absolute;
     float: left;
     background: black;
     color: white;
-    //width: 100px;
     padding: 0.3em;
     margin: 10px;
     text-align: center;
     vertical-align: middle;
-    //line-height: 100px;
 }
+/* ========================================================================= */
 
-.bottomfix {
-   position:fixed;
-   left:0px;
-   bottom:0px;
-   height:60px;
-   width:100%;
-   background:#999;
-   overflow:auto;
+/* ------------------------------------------------------------------------- */
+/* the class is used for svg elements that represent paths 
+ * between expressions
+ */
+.exprpath {
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
+/* ========================================================================= */
 
-/* IE 6 */
-* html .bottomfix  {
-   position:absolute;
-   top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
+/* ------------------------------------------------------------------------- */
+/* we need to place two divs inside each other to make an element
+ * both resizable and draggable in jQuery Ui; this is the outer div
+ * that will be draggable
+ */
+.sheetcontext {
+    position: absolute !important;
+    // distinctive border for context
+    border: double green;
+    // make the div shrink around inner div
+    display: inline-block;
 }
+/* ========================================================================= */
 
-.equpath {
-   position: fixed;
-   top: 0px;
-   left: 0px;
+/* ------------------------------------------------------------------------- */
+/* we need to place two divs inside each other to make an element
+ * both resizable and draggable in jQuery Ui; this is the inner div
+ * that will be resizable
+ */
+.sheetcontext_rsz {
+    // default background
+    background: #E0E0E0;
+    // default dimensions for context blocks
+    width: 60px; 
+    height: 60px;
+
 }
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* style for current element */
+.infile_crt {
+    -moz-box-shadow: 5px 5px 5px $crtElShadow;
+    -webkit-box-shadow: 5px 5px 5px $crtElShadow;
+    box-shadow: 5px 5px 5px $crtElShadow;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* style for selected element */
+.infile_sel {
+    -moz-box-shadow: 5px 5px 5px $selElShadow;
+    -webkit-box-shadow: 5px 5px 5px $selElShadow;
+    box-shadow: 5px 5px 5px $selElShadow;    
+}
+/* ========================================================================= */
+
+
+/*  CLASSES    ============================================================= */
+//
+//
+//
+//
+/* ------------------------------------------------------------------------- */
+/* ========================================================================= */

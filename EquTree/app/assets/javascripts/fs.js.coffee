@@ -79,15 +79,15 @@ FSTYPE =
       types:
         directory:
           icon:
-            image: 'assets/themes/classic/d.png'
+            image: '/assets/themes/classic/d.png'
             position: '-56px -18px'
         generic:
           icon:
-            image: 'assets/fatcow-icons-16.png'
+            image: '/assets/fatcow-icons-16.png'
             position: '0px 0px'
         mathsheet:
           icon:
-            image: 'assets/fatcow-icons-16.png'
+            image: '/assets/fatcow-icons-16.png'
             position: '-16px 0px'
       ui:
         select_limit: 1
@@ -106,13 +106,13 @@ FSTYPE =
     sel_id = data.rslt.obj.attr("id");
     sel_kind = fsIdKind sel_id # [0] - FSTYPE, [1] - index of that item
     jQuery('#fs_content_dir').hide()
-    jQuery('#fs_content_file').hide()
+    jQuery('#fs_file_zone').hide()
     jQuery('#fs_content_dir').empty()
-    jQuery('#fs_content_file').empty()
+    jQuery('#fs_file_zone').empty()
     if ( sel_kind[0] is  FSTYPE.INVALID )
       jQuery('#fs_content_header').innerHTML = "No selection"
     else
-      jQuery('#fs_content_header').text( dt.jstree( 'get_text', data.rslt.obj ) )
+      jQuery('#fs_content_header').text( '/' + dt.jstree( 'get_path', data.rslt.obj ).join('/') )
       if ( sel_kind[0] == FSTYPE.DIR )
         jQuery('#fs_content_dir').show()
         allChildren = jQuery('#' + sel_id).children('ul').children('li')
@@ -121,9 +121,9 @@ FSTYPE =
           $("#fs_content_dir").append("<div>" + dt.jstree( 'get_text', allChildren[i] ) + "</div>")
           i++
       else
+        jQuery('#fs_file_zone').show()
         #file_type = jQuery('#' + sel_id).attr('rel')
         fsGetFileContent sel_kind[1]
-        jQuery('#fs_content_file').show()
         
 
   # jQuery('#directory_tree').bind 'rename_node.jstree', (event, data) -> 
@@ -169,21 +169,21 @@ FSTYPE =
 # ------------------------------------------------------------------------- 
 fsFileNotif = (text) ->
   div_cnt = $('#fs_content_notifier')[0]
-  div_cnt.innerHTML = text
+  #div_cnt.innerHTML = text
   div_cnt.style.color = 'blue'
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
 fsFileErr = (text) ->
   div_cnt = $('#fs_content_notifier')[0]
-  div_cnt.innerHTML = text
-  div_cnt.style.color = 'red'
+  #div_cnt.innerHTML = text
+  #div_cnt.style.color = 'red'
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
 fsClearFileErr = (text) ->
   div_cnt = $('#fs_content_notifier')[0]
-  div_cnt.innerHTML = ''
+  #div_cnt.innerHTML = ''
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
@@ -195,7 +195,7 @@ fsGetFileContent = (file_id) ->
     
   jqxhr = $.ajax(
     type: 'POST'
-    url: 'files'
+    url: '/files'
     dataType: "json"
     data: ajax_data
   ).done( (data) ->
@@ -215,7 +215,6 @@ fsGetFileContent = (file_id) ->
       jqxhr.responseText + '.<br>' + 
       'status: ' + jqxhr.statusText
   )
-  # #fs_content_file
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
@@ -225,7 +224,7 @@ fsRender_MathSheet = (file_id,data) ->
     fsFileErr("Wrong file type: : " + data.file_type )
     return
   
-  top_div = jQuery('#fs_content_file')
+  top_div = jQuery('#fs_file_zone')
   
   console.log data
 
@@ -311,7 +310,7 @@ fsSendAjax = (dt,ajax_data) ->
 
   jqxhr = $.ajax(
     type: 'POST'
-    url: 'directories'
+    url: '/directories'
     dataType: "json"
     data: ajax_data
   ).done( (data) ->

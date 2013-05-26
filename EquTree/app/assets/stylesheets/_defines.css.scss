@@ -1,20 +1,15 @@
 /* ========================================================================= */
 /* ------------------------------------------------------------------------- */
 /*
-  \file         dfiles.css.scss
+  \file         _defines.css.scss
   \date         Apr 2013
   \author       TNick
 
-  \brief        Styles for files related components
+  \brief        Common definitions for all stylesheets
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  Please read COPYING and README files in root folder
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- Place all the styles related to the Sessions controller here.
- They will automatically be included in application.css.
- You can use Sass (SCSS) here: http://sass-lang.com/
-
 */
 /* ------------------------------------------------------------------------- */
 /* ========================================================================= */
@@ -30,6 +25,14 @@
 //
 //
 /*  DEFINITIONS    --------------------------------------------------------- */
+
+$grayMediumLight: #eaeaea;
+
+@mixin box_sizing {
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box;
+}
 
 /*  DEFINITIONS    ========================================================= */
 //

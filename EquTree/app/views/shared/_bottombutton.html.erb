@@ -4,7 +4,7 @@
 <%-#  \date			May 2013                                                -%>
 <%-#  \author		TNick                                                   -%>
 <%-#                                                                        -%>
-<%-#  \brief		View for editing user profile                           -%>
+<%-#  \brief		Renders a button at the bottom                          -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- %>
@@ -17,43 +17,19 @@
 <%-#                                                                        -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>
-<%-#  HEADER    ----------------------------------------------------------- -%>
-
-<% provide(:title, @user.name) %>
-
-<%-#  HEADER    =========================================================== -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
-<%-#                                                                        -%>
 <%-#  CONTENT    ---------------------------------------------------------- -%>
 
-<div>
-  <%= render 'shared/main_content' %>
+<% readable_name = name.capitalize.sub '_', ' ' %>
+
+<div id="btmbtn_<%= name %>" class="bottom_btn" onclick="onBtmBtn<%= name.capitalize %>()">
+    <div class="bottom_btn_img">
+        <%= image_tag( name + '.png' ) %>
+    </div>
+    <div class="bottom_btn_label">
+        <%= readable_name %>
+    </div>
 </div>
-
-
-<!--div class="row">
-
-
-
-
-
-
-  <aside class="span4">
-
-
-
-  </aside>
-
-
-  <div class="span8">
-    <p>Content for the user... TBD</p>
-  </div>
-
-
-</div-->
-
+  
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>

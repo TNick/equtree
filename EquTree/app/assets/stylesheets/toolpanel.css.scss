@@ -1,20 +1,14 @@
 /* ========================================================================= */
 /* ------------------------------------------------------------------------- */
 /*
-  \file         dfiles.css.scss
   \date         Apr 2013
   \author       TNick
 
-  \brief        Styles for files related components
+  \brief        Styles for the toolbars
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  Please read COPYING and README files in root folder
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- Place all the styles related to the Sessions controller here.
- They will automatically be included in application.css.
- You can use Sass (SCSS) here: http://sass-lang.com/
-
 */
 /* ------------------------------------------------------------------------- */
 /* ========================================================================= */
@@ -23,6 +17,9 @@
 //
 //
 /*  INCLUDES    ------------------------------------------------------------ */
+
+@import "bootstrap";
+@import "defines";
 
 /*  INCLUDES    ============================================================ */
 //
@@ -37,6 +34,37 @@
 //
 //
 /*  CLASSES    ------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------- */
+/* class for toolpanels */
+.toolpanel {
+    
+    // start hidden
+    display: none;
+}
+/* ========================================================================= */
+
+.ui-dialog {
+    font-size: 90%;
+}
+
+.ui-dialog-titlebar-close {
+   width: 16px;
+   height:16px;
+}
+.ui-icon-closethick {
+   width: 14px;
+   height:14px;
+   margin:0px !important;
+   left:0px !important;
+   top:0px !important;
+}
+.ui-dialog-titlebar {
+   padding:0px !important;
+}
+.ui-dialog {
+   padding:0px !important;
+}
 
 /*  CLASSES    ============================================================= */
 //
