@@ -1,0 +1,23 @@
+[class^="eqticon16_"],
+[class*=" eqticon16_"] {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  *margin-right: .3em;
+  line-height: 2px;
+  vertical-align: text-top;
+  background-image: url(image_path("fatcow-icons-16.png"));
+  background-repeat: no-repeat;
+  margin-top: 0px;
+}
+
+.eqticon16_generic {
+  background-position: 0      0;
+}
+.eqticon16_mathsheet {
+  background-position: -16px  0;
+}
+.eqticon16_directory {
+  background-position: -56px -18px;
+  background-image: url('/assets/themes/classic/d.png');
+}

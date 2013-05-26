@@ -54,7 +54,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     
     # get its directories
-    @directories = @user.directories.paginate( page: params[:page] )
+    @directories = @user.directories.arrange(:order => :created_at)
     
   end # def show
   # ======================================================================

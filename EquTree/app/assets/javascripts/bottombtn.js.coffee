@@ -153,6 +153,7 @@ toogleButton = ( the_name ) ->
 
 # ------------------------------------------------------------------------- 
 @bottomBtnInit = ->
+  
   # initialisation
   the_dlg_expl = createDialog( 'explore', 'left center' )
   the_dlg_cont = createDialog( 'content', 'right center' )

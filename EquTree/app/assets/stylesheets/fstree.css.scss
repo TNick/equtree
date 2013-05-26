@@ -38,6 +38,34 @@
 /*  CLASSES    ------------------------------------------------------------- */
 
 /* ------------------------------------------------------------------------- */
+/* container div for the content of the directory */
+.fs_content_dir  {
+    padding-left: 4em;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* div for the name of the current directory as displayed in fs_content_dir */
+.fs_cdir_name  {
+    align: left;
+    font-weight: bold;
+    font-size: 120%;
+    padding: 1em;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* an entry in current directory as displayed in fs_content_dir */
+.fs_cdir_entry  {
+    align: left;
+    font-weight: bold;
+    font-size: 100%;
+    display: block;
+}
+/* ========================================================================= */
+
+
+/* ------------------------------------------------------------------------- */
 /* the tree that presents directory structure
  */
 .directory-tree {
@@ -70,15 +98,16 @@
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
+/* en entry in the tree of files that represents a directory */
 .directory-entry {
-  
+    display: block;
 }
 /* ========================================================================= */
 
 /* ------------------------------------------------------------------------- */
-.directory-label {
-    text-decoration:underline;
-    font-weight:bold;
+/* en entry in the tree of files that represents a file */
+.file-entry {
+    display: block;
 }
 /* ========================================================================= */
 

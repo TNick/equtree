@@ -383,10 +383,7 @@ createNewContext = ( parent_ctx )->
 
 # ------------------------------------------------------------------------- 
 @sheetInit = ->
-
-  $('#fs_content_dir').hide()
-  $('#fs_file_zone').hide()
-
+  
   # make display area resizable
   resz_opts =
     autoHide: false # hide handlers when not hovering
