@@ -73,6 +73,8 @@
         <%= content_tag( :div, value, class: "alert alert-#{key}" ) %>
       <% end %>
       
+      <%-# message panel -%>
+      <%= render 'shared/message' %>
       
       <%-# Actual content of the page -%>
       <%= yield %>

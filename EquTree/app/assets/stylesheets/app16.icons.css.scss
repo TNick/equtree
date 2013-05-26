@@ -1,3 +1,5 @@
+
+
 [class^="eqticon16_"],
 [class*=" eqticon16_"] {
   display: inline-block;
@@ -10,14 +12,21 @@
   background-repeat: no-repeat;
   margin-top: 0px;
 }
+.eqticon16_directory {
+  background-position: -56px -18px;
+  background-image: url('/assets/themes/classic/d.png');
+}
 
-.eqticon16_generic {
+
+.eqticon16_generic   {
   background-position: 0      0;
 }
 .eqticon16_mathsheet {
   background-position: -16px  0;
 }
-.eqticon16_directory {
-  background-position: -56px -18px;
-  background-image: url('/assets/themes/classic/d.png');
+.eqticon16_error     { // TODO add this image
+  background-position: -32px  0;
+}
+.eqticon16_info      { // TODO add this image
+  background-position: -48px  0;
 }

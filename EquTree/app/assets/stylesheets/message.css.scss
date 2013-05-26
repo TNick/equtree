@@ -1,0 +1,131 @@
+/* ========================================================================= */
+/* ------------------------------------------------------------------------- */
+/*
+  \date         Apr 2013
+  \author       TNick
+
+  \brief        Styles for the message panel
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Please read COPYING and README files in root folder
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+/* ------------------------------------------------------------------------- */
+/* ========================================================================= */
+//
+//
+//
+//
+/*  INCLUDES    ------------------------------------------------------------ */
+
+@import "bootstrap";
+@import "defines";
+
+/*  INCLUDES    ============================================================ */
+//
+//
+//
+//
+/*  DEFINITIONS    --------------------------------------------------------- */
+
+// color for the background of the message
+$msgBackColor: #FCF172;
+$msgBackColor2: #e9e5e5;
+$msgBackColorStart: 50%;
+$msgBackColorStart2: 100%;
+
+// the color of the shadow
+$msgShadowColor: #BD096F;
+
+/*  DEFINITIONS    ========================================================= */
+//
+//
+//
+//
+/*  CLASSES    ------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------- */
+/* The panel (top level div) that presents the messages
+ */
+.message_panel {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 40%;
+    // width: 200px;
+    // height: 200px;
+    z-index: 1000;
+    border-radius: 30px;
+    box-shadow: 0px 0px 15px $msgShadowColor;
+    padding: 30px;
+    background-color: $msgBackColor;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop($msgBackColorStart, $msgBackColor), color-stop($msgBackColorStart2, $msgBackColor2));
+    background: -moz-linear-gradient(top, $msgBackColor $msgBackColorStart, $msgBackColor2 $msgBackColorStart2);
+    background: -ms-linear-gradient(top, $msgBackColor $msgBackColorStart,$msgBackColor2 $msgBackColorStart2);
+    background: linear-gradient(to bottom, $msgBackColor $msgBackColorStart,$msgBackColor2 $msgBackColorStart2);
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* the list that presents the messages inside the panel */
+.msgp_content {
+    list-style-image: none;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* a message inside the panel */
+[class^="msgp_entry_"],
+[class*=" msgp_entry_"] {
+    // text-indent: 5px;
+    padding: 0px;
+    margin: 0px;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* a message inside the panel */
+.msgp_entry_error {
+    color: red;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* a message inside the panel */
+.msgp_entry_info {
+    color: black;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* the close button */
+.msgp_button {
+    align: center;
+    border: 1px solid $grayMediumLight;
+    text-align: center;
+    display: inline-block;
+    padding: 4px;
+    border-radius: 8px;
+    color: $grayMediumLight;
+    cursor:pointer;
+}
+/* ========================================================================= */
+
+/* ------------------------------------------------------------------------- */
+/* the close button when hovered*/
+.msgp_button:hover {
+    border: 2px solid red;
+    color: red;
+}
+/* ========================================================================= */
+
+/*  CLASSES    ============================================================= */
+//
+//
+//
+//
+/* ------------------------------------------------------------------------- */
+/* ========================================================================= */
