@@ -63,7 +63,15 @@ class StaticPagesController < ApplicationController
   end # def contact
   # ======================================================================
   
+  # ----------------------------------------------------------------------
+  # Todo page
+  def todo
 
+    # stub; simply show the view in app/views/static_pages
+
+  end # def todo
+  # ======================================================================
+  
 end # class StaticPagesController
 
 #  CLASS    ===============================================================
