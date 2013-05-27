@@ -1,7 +1,37 @@
+== EquTree application
+
+This site attempts to provide a web interface and a storage space
+for your equations. It is based on Ruby on Rails and jQuery.
+
+The application manages users that have a file-system-like storage
+space, with directories and files. At this time the only kind
+of file that may be stored is a math sheet.
+
+
+== Site structure
+- /home
+  - unregistered user: allows sign in
+  - registered user: TBD
+
+  
+  
+
+== The database
+
+The tables in the database are as follows:
+- users: store users information and links to the directories
+belonging to each user
+- directories: only the name and links to contained file
+- files: generic information about files and links to 
+specific table
+- sheets: files of mathsheet type
+- contexts: contexts for sheetsl contains expressions
+- expressions: 
+
 
 == Description of Contents
 
-The default directory structure of a generated Ruby on Rails application:
+The directory structure of this application:
 
   |-- app
   |   |-- assets
@@ -63,15 +93,12 @@ app/views
 
 app/views/layouts
   Holds the template files for layouts to be used with views. This models the
-  common header/footer method of wrapping views. In your views, define a layout
-  using the <tt>layout :default</tt> and create a file named default.html.erb.
-  Inside default.html.erb, call <% yield %> to render the view using this
-  layout.
+  common header/footer method of wrapping views.
 
 app/helpers
   Holds view helpers that should be named like weblogs_helper.rb. These are
   generated for you automatically when using generators for controllers.
-  Helpers can be used to wrap functionality for your views into methods.
+  Helpers can be used to wrap functionality for the views into methods.
 
 config
   Configuration files for the Rails environment, the routing map, the database,
@@ -79,10 +106,10 @@ config
 
 db
   Contains the database schema in schema.rb. db/migrate contains all the
-  sequence of Migrations for your schema.
+  sequence of Migrations for the schema.
 
 doc
-  This directory is where your application documentation will be stored when
+  This directory is where the application documentation will be stored when
   generated using <tt>rake doc:app</tt>
 
 lib
@@ -92,7 +119,7 @@ lib
 
 public
   The directory available for the web server. Also contains the dispatchers and the
-  default HTML files. This should be set as the DOCUMENT_ROOT of your web
+  default HTML files. This should be set as the DOCUMENT_ROOT of the web
   server.
 
 script
