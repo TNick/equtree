@@ -2,10 +2,11 @@
 #
 # Table name: sheets
 #
-#  id          :integer          not null, primary key
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id         :integer          not null, primary key
+#  context_id :integer
+#  dfile_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

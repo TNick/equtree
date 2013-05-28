@@ -1,16 +1,3 @@
-# == Schema Information
-#
-# Table name: dfiles
-#
-#  id           :integer          not null, primary key
-#  name         :string(255)
-#  directory_id :integer
-#  ftype        :integer
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  type_index   :integer
-#
-
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -36,17 +23,21 @@
 #
 # == Schema Information
 #
-# Table name: directories
+# Table name: dfiles
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  directory_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string(255)
+#  directory_id  :integer
+#  ftype         :integer
+#  type_index    :integer
+#  special_users :text
+#  public_policy :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-#
+
 class Dfile < ActiveRecord::Base
-  before_create :allocStorage
+  after_save :allocStorage
   around_destroy :releaseStorage
   
   #
@@ -77,6 +68,8 @@ class Dfile < ActiveRecord::Base
   # any directory is part of an user
   belongs_to :directory
   
+  # special users is an array of entries in form user_id - permission
+  serialize :special_users, :special_users
   
   #  ATTRIBUTES    ========================================================
   # 
@@ -160,18 +153,22 @@ private
 
   # -----------------------------------------------------------------------
   def allocStorage
-    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    # d "allocate storage for file"
-    # d id
-    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "allocate storage for file"
+    d self.id
+    d self.type_index
+    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
     case self.ftype
     when FTYPE_SHEET
-      sheet = Sheet.create()
-      self.type_index = sheet.id
-      # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-      # d "allocStorage: math sheet"
-      # d sheet
-      # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+      if self.type_index == -1
+        sheet = Sheet.create( dfile_id: self.id )
+        self.type_index = sheet.id
+        self.save()
+        d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        d "allocStorage: math sheet"
+        d sheet
+        d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+      end
     else
       self.type_index = -1
     end
@@ -180,19 +177,19 @@ private
   
   # -----------------------------------------------------------------------
   def releaseStorage
-    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    # d "release storage for file"
-    # d id
-    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    d "release storage for file"
+    d self.id
+    d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
     
     case self.ftype
     when FTYPE_SHEET
       sheet = Sheet.find_by_id(self.type_index)
       if ( sheet )
-        # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-        # d "releaseStorage: math sheet"
-        # d sheet
-        # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        d "releaseStorage: math sheet"
+        d sheet
+        d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
         # sheet.decRef()
         sheet.destroy
       end

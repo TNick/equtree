@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: contexts
+#
+#  id            :integer          not null, primary key
+#  sheet_id      :integer
+#  ancestry      :text
+#  description   :text
+#  info_uri      :text
+#  position_left :float
+#  position_top  :float
+#  size_width    :float
+#  size_height   :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -23,16 +40,19 @@
 #
 # == Schema Information
 #
-# Table name: formulas
+# Table name: expressions
 #
-#  id         :integer          not null, primary key
-#  omath      :text
-#  descr      :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  sheet_id   :integer          not null
+#  id            :integer          not null, primary key
+#  context_id    :integer
+#  omath         :text
+#  description   :text
+#  info_uri      :text
+#  position_left :float
+#  position_top  :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-class Formula < ActiveRecord::Base
+class Context < ActiveRecord::Base
   
   #
   #
@@ -49,9 +69,9 @@ class Formula < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :descr, :omath
+  attr_accessible :description, :info_uri, :position_left, :position_top, :size_width, :size_height
   
-  # any formula is part of a sheet
+  # any context is part of a sheet
   belongs_to :sheet
   
   #  ATTRIBUTES    ========================================================
@@ -61,10 +81,21 @@ class Formula < ActiveRecord::Base
   #
   #  VALIDATION    --------------------------------------------------------
 
-
-  # there must always be a name that is between 1 and 50 characters long
-  validates :omath,  presence: true
-
+  # the context should be valid
+  validates :sheet_id,  presence: true
+  
+  # there must always be a position
+  validates :position_left,  presence: true
+  
+  # there must always be a position
+  validates :position_top,  presence: true
+  
+  # there must always be a size
+  validates :size_width,  presence: true
+  
+  # there must always be a size
+  validates :size_height,  presence: true
+  
   #  VALIDATION    ========================================================
   #
   #
@@ -97,7 +128,7 @@ private
   #
   #
   
-end # class Sheet
+end # class Context
 
 #  CLASS    ===============================================================
 #

@@ -35,12 +35,6 @@
 #
 #  DATA    ---------------------------------------------------------------- 
 
-# the id of the timer we're using to hide the message
-timerId = 0
-
-# seconds left until we're closing the dialog
-timer_seconds = 0
-
 #  DATA    ================================================================ 
 #
 #
@@ -49,9 +43,34 @@ timer_seconds = 0
 #  INTERNAL FUNCTIONS    --------------------------------------------------
 
 # ------------------------------------------------------------------------- 
+# stop the timer
+@stopTimer = ->
+  console.log "stopTimer", window.timer_id_message, window.timer_id_message.length
+  i = 0
+  while i < window.timer_id_message.length
+    console.log 'i=',i
+    clearInterval( window.timer_id_message );
+    i++
+  window.timer_id_message = []
+  console.log "^stopTimer", window.timer_id_message
+# ========================================================================= 
+
+# ------------------------------------------------------------------------- 
+# start the timer
+@startTimer = (interval) ->
+  stopTimer()
+  window.timer_seconds_message = 5
+  window.timer_id_message[0] = setInterval( onMsgPanelSecond, interval )
+  console.log 'window.timer_id_message', window.timer_id_message
+  console.log 'window.timer_seconds_message', window.timer_seconds_message
+  
+# ========================================================================= 
+
+
+# ------------------------------------------------------------------------- 
 # path components click
-onMsgPanelClick = (event) ->
-  clearInterval( timerId );
+@onMsgPanelClick = (event) ->
+  stopTimer()  
   $('#msgp_button').text( 'Close' )
   event.stopPropagation()
   return 0
@@ -59,30 +78,35 @@ onMsgPanelClick = (event) ->
 
 # ------------------------------------------------------------------------- 
 # hide button click
-onMsgPanelButtonClick = (event) ->
+@onMsgPanelButtonClick = (event) ->
+  window.timer_seconds_message = 0
   $('#message_panel').hide()
   event.stopPropagation()
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
 # path components click
-onMsgPanelSecond = () ->
-  timer_seconds--;
-  $('#msgp_button').text( 'Close (' + timer_seconds + ')' )
-  if ( timer_seconds <= 0 )
-    clearInterval( timerId )
+@onMsgPanelSecond = () ->
+
+  console.log 'onMsgPanelSecond', window.timer_seconds_message, window.timer_id_message
+  window.timer_seconds_message--;
+  $('#msgp_button').text( 'Close (' + window.timer_seconds_message + ')' )
+  if window.timer_seconds_message <= 0
+    stopTimer()
     $('#message_panel').hide()
+    console.log "Timer expired; message was hidden"
 
 # ========================================================================= 
 
 # ------------------------------------------------------------------------- 
 # generic message presenter
-presentMessage = (message,msg_type,clear_previous) ->
-  console.log clear_previous
+@presentMessage = (message,msg_type,clear_previous) ->
   if clear_previous is undefined
     clear_previous = true
   
+  console.log message, msg_type, clear_previous
   if clear_previous
+    console.log 'Clearing'
     msgClear()
   
   icon_class = 'eqticon16_' + msg_type
@@ -100,12 +124,18 @@ presentMessage = (message,msg_type,clear_previous) ->
 #
 #
 #  EXTERNAL FUNCTIONS    --------------------------------------------------
-
+ 
 # ------------------------------------------------------------------------- 
 # initialises the messages components for a page
 @msgInit = ->
-  console.log '@msgInit'
   
+  
+  # the id of the timer we're using to hide the message
+  window.timer_id_message = []
+  # seconds left until we're closing the dialog
+  window.timer_seconds_message = 0
+  
+   
   # set-up event handlers
   the_msg = $('#message_panel')
   the_msg.on 'click', onMsgPanelClick
@@ -114,8 +144,8 @@ presentMessage = (message,msg_type,clear_previous) ->
 
   # hide the message if the user is doing something else
   $('html').on 'click', ( ->
-    if the_msg.is(":visible")
-      the_msg.hide()
+    $('#message_panel').hide()
+    window.timer_seconds_message = 0
   )
 
   # only for testing
@@ -126,17 +156,19 @@ presentMessage = (message,msg_type,clear_previous) ->
 # ------------------------------------------------------------------------- 
 # presents the panel and starts the counter
 @msgShow = ->
-  
-  timer_seconds = jQuery.jCookie('message-timeout')
-  if ( not timer_seconds ) or ( timer_seconds < 2 )
-    timer_seconds = 5
-    jQuery.jCookie('message-timeout', timer_seconds)
+  console.log '@msgShow'
+  window.timer_seconds_message = jQuery.jCookie('message-timeout')
+  if ( not window.timer_seconds_message ) or ( window.timer_seconds_message < 2 )
+    window.timer_seconds_message = 5
+    jQuery.jCookie('message-timeout', window.timer_seconds_message)
 
+  console.log 'window.timer_seconds_message', window.timer_seconds_message
   the_msg = $('#message_panel')
   the_msg.show()
   the_msg_btn = $('#msgp_button')
-  the_msg_btn.text( 'Close (' + timer_seconds + ')' )
-  timerId = setInterval( onMsgPanelSecond, 1000)
+  the_msg_btn.text( 'Close (' + window.timer_seconds_message + ')' )
+  #the_msg.css('top', ($(window).scrollTop()+50) + 'px')
+  startTimer( 1000 )
   
 # ========================================================================= 
 
@@ -158,6 +190,7 @@ presentMessage = (message,msg_type,clear_previous) ->
 # show an informative message; may be either appended or may replace the content
 # clear_previous defaults to true
 @msgInfo = (message,clear_previous) ->
+  console.log message
   presentMessage(message,'info',clear_previous)
 # ========================================================================= 
 

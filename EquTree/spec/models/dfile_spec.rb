@@ -2,13 +2,15 @@
 #
 # Table name: dfiles
 #
-#  id           :integer          not null, primary key
-#  name         :string(255)
-#  directory_id :integer
-#  ftype        :integer
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  type_index   :integer
+#  id            :integer          not null, primary key
+#  name          :string(255)
+#  directory_id  :integer
+#  ftype         :integer
+#  type_index    :integer
+#  special_users :text
+#  public_policy :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 
 # ========================================================================= 
@@ -54,6 +56,8 @@ describe "File model" do
   it { should respond_to( :type_index ) }
   it { should respond_to( :typeName ) }
   it { should respond_to( :getSheet ) }
+  it { should respond_to( :special_users ) }
+  it { should respond_to( :public_policy ) }
   it { should be_valid }
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   

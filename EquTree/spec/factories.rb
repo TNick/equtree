@@ -53,6 +53,8 @@ FactoryGirl.define do
     sequence(:name)		{ |n| "File #{n}" }
 	ftype				Dfile::FTYPE_TEST
     type_index          -1
+    # special_users       SpecialUsers.new()
+    public_policy       0
     directory
 	
   end
@@ -62,18 +64,49 @@ FactoryGirl.define do
   # create an entry of Sheet kind
   factory :sheet do
   
-    sequence(:description)		{ |n| "Description #{n}" }
+    context_id              0
+    dfile_id                0
 	
   end
   # =======================================================================
 
   # -----------------------------------------------------------------------
-  # create an entry of Formula kind
-  factory :formula do
+  # create an entry of Context kind
+  factory :context do
   
-    sequence(:descr)		{ |n| "Description #{n}" }
-	sequence(:omath)		{ |n| "Omath #{n}" }
+    sequence(:description)  { |n| "Description #{n}" }
+    sequence(:info_uri)     { |n| "http://www.google.com/#{n}" }
+    position_left           0.0
+    position_top            0.0
+    size_width              80.0
+    size_height             80.0
+    
     sheet
+  end
+  # =======================================================================
+ 
+  # -----------------------------------------------------------------------
+  # create an entry of Formula kind
+  factory :expression do
+  
+    sequence(:description)  { |n| "Description #{n}" }
+	sequence(:omath)		{ |n| "Omath #{n}" }
+    sequence(:info_uri)     { |n| "http://www.google.com/#{n}" }
+    position_left           0.0
+    position_top            0.0
+    context
+    
+  end
+  # =======================================================================
+ 
+  # -----------------------------------------------------------------------
+  # create an entry of Imports kind
+  factory :import do
+  
+    imported_context_id     0
+    position_left           0.0
+    position_top            0.0
+    context
     
   end
   # =======================================================================

@@ -1,10 +1,25 @@
+# == Schema Information
+#
+# Table name: expressions
+#
+#  id            :integer          not null, primary key
+#  context_id    :integer
+#  omath         :text
+#  description   :text
+#  info_uri      :text
+#  position_left :float
+#  position_top  :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
-#  \date		May 2013
-#  \author		TNick
+#  \date        May 2013
+#  \author      TNick
 #
-#  \brief		Code for a directory
+#  \brief       Code for a directory
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,21 +34,23 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# models the data associated with an directory
+# models the data associated with a sheet
 #
 # == Schema Information
 #
-# Table name: directories
+# Table name: expressions
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  ancestry   :string(255)
+#  id            :integer          not null, primary key
+#  context_id    :integer
+#  omath         :text
+#  description   :text
+#  info_uri      :text
+#  position_left :float
+#  position_top  :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-
-class Directory < ActiveRecord::Base
+class Expression < ActiveRecord::Base
   
   #
   #
@@ -50,17 +67,10 @@ class Directory < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name, :parent_id
-  # :user_id is not accesible
-
-  # will be arranged in a tree
-  has_ancestry
-
-  # any directory is part of an user
-  belongs_to :user
+  attr_accessible :description, :omath, :info_uri, :position_left, :position_top
   
-  # files are rooted here
-  has_many :dfiles
+  # any formula is part of a context
+  belongs_to :context
   
   #  ATTRIBUTES    ========================================================
   #
@@ -69,15 +79,19 @@ class Directory < ActiveRecord::Base
   #
   #  VALIDATION    --------------------------------------------------------
 
+  # the context should be valid
+  validates :context_id,  presence: true
+  
   # there must always be a name that is between 1 and 50 characters long
-  validates :name,	presence: true, 
-					length: { minimum: 1, maximum: 50 }
-
-  # always have an user
-  validates :user_id, 
-                    presence: true
-
-
+  validates :omath,  presence: true
+  
+  # there must always be a position
+  validates :position_left,  presence: true
+  
+  # there must always be a position
+  validates :position_top,  presence: true
+  
+  
   #  VALIDATION    ========================================================
   #
   #
@@ -92,6 +106,18 @@ class Directory < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
+  def toJSON
+    result = {
+        descr: description,
+        omath: omath,
+        info_uri: info_uri,
+        left: position_left,
+        top: position_top
+      }
+    
+  end
+  
+  
 private
 
 
@@ -101,7 +127,7 @@ private
   #
   #
   
-end # class User
+end # class Expression
 
 #  CLASS    ===============================================================
 #

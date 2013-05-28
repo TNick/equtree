@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: sheets
+#
+#  id         :integer          not null, primary key
+#  context_id :integer
+#  dfile_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -6,17 +17,6 @@
 #
 #  \brief		RSpec Tests for Sheet data model
 #
-
-# == Schema Information
-#
-# Table name: sheets
-#
-#  id          :integer          not null, primary key
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#
-
 #  INCLUDES    -----------------------------------------------------------
 
 require 'spec_helper'
@@ -46,7 +46,8 @@ describe "Sheet model" do
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # check the fields
-  it { should respond_to( :description ) }
+  it { should respond_to( :context_id ) }
+  it { should respond_to( :dfile_id ) }
   it { should respond_to( :created_at ) }
   it { should respond_to( :updated_at ) }
   it { should be_valid }
@@ -59,35 +60,34 @@ describe "Sheet model" do
     end
     describe "is valid filled" do
         before do
-          @sheet.description = 'Some description'
+          # @sheet.description = 'Some description'
         end
         it { should be_valid }
      end
     describe "is valid empty" do
         before do
-          @sheet.description = ''
+          #@sheet.description = ''
         end
         it { should be_valid }
      end
   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
-  
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "description" do
-    describe "is valid filled" do
-        before do
-          @sheet.description = 'Some description'
-        end
-        it { should be_valid }
-     end
-    describe "is valid empty" do
-        before do
-          @sheet.description = ''
-        end
-        it { should be_valid }
-     end
-  end
+#   describe "description" do
+#     describe "is valid filled" do
+#         before do
+#           @sheet.description = 'Some description'
+#         end
+#         it { should be_valid }
+#      end
+#     describe "is valid empty" do
+#         before do
+#           @sheet.description = ''
+#         end
+#         it { should be_valid }
+#      end
+#   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

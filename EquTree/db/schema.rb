@@ -11,50 +11,80 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130522071242) do
+ActiveRecord::Schema.define(:version => 20130514180425) do
+
+  create_table "contexts", :force => true do |t|
+    t.integer  "sheet_id"
+    t.text     "ancestry"
+    t.text     "description"
+    t.text     "info_uri"
+    t.float    "position_left"
+    t.float    "position_top"
+    t.float    "size_width"
+    t.float    "size_height"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "contexts", ["ancestry"], :name => "index_contexts_on_ancestry"
 
   create_table "dfiles", :force => true do |t|
     t.string   "name"
     t.integer  "directory_id"
     t.integer  "ftype"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
     t.integer  "type_index"
+    t.text     "special_users"
+    t.integer  "public_policy"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "directories", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
+    t.string   "ancestry"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.string   "ancestry"
   end
 
   add_index "directories", ["ancestry"], :name => "index_directories_on_ancestry"
   add_index "directories", ["user_id", "created_at"], :name => "index_directories_on_user_id_and_created_at"
 
-  create_table "formulas", :force => true do |t|
+  create_table "expressions", :force => true do |t|
+    t.integer  "context_id"
     t.text     "omath"
-    t.text     "descr"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.integer  "sheet_id"
+    t.text     "description"
+    t.text     "info_uri"
+    t.float    "position_left"
+    t.float    "position_top"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "imports", :force => true do |t|
+    t.integer  "context_id"
+    t.integer  "imported_context_id"
+    t.float    "position_left"
+    t.float    "position_top"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "sheets", :force => true do |t|
-    t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "context_id"
+    t.integer  "dfile_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
     t.string   "password_digest"
     t.string   "remember_token"
     t.boolean  "admin"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"

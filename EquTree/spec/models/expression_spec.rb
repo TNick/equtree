@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: expressions
+#
+#  id            :integer          not null, primary key
+#  context_id    :integer
+#  omath         :text
+#  description   :text
+#  info_uri      :text
+#  position_left :float
+#  position_top  :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -6,19 +21,6 @@
 #
 #  \brief		RSpec Tests for Sheet data model
 #
-
-# == Schema Information
-#
-# Table name: formulas
-#
-#  id         :integer          not null, primary key
-#  omath      :text
-#  descr      :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  sheet_id   :integer          not null
-#
-
 #  INCLUDES    -----------------------------------------------------------
 
 require 'spec_helper'
@@ -31,27 +33,33 @@ require 'spec_helper'
 #  TESTS    --------------------------------------------------------------
 
 # ------------------------------------------------------------------------- 
-describe "Formula model" do
+describe "Expression model" do
   
   let(:user) { FactoryGirl.create(:user) }
   let(:directory) { FactoryGirl.create(:directory, user: user) }
   let(:dfile) { FactoryGirl.create(:dfile, directory: directory, ftype: Dfile::FTYPE_SHEET ) }
   let(:sheet) { dfile.getSheet() }
+  let(:context) { FactoryGirl.create(:context, sheet: sheet) }
   before do
 	# get creates sheet from file
-	@formula = FactoryGirl.create(:formula, sheet: sheet)
+	@expression = FactoryGirl.create(:expression, context: context)
   end
 
    
   # default target for future tests
-  subject { @formula }
+  subject { @expression }
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # check the fields
-  it { should respond_to( :descr ) }
+  it { should respond_to( :context_id ) }
   it { should respond_to( :omath ) }
+  it { should respond_to( :description ) }
+  it { should respond_to( :info_uri ) }
+  it { should respond_to( :position_left ) }
+  it { should respond_to( :position_top ) }
   it { should respond_to( :created_at ) }
   it { should respond_to( :updated_at ) }
+  
   it { should be_valid }
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
@@ -59,13 +67,13 @@ describe "Formula model" do
   describe "description" do
     describe "is valid filled" do
         before do
-          @formula.descr = 'Some description'
+          @expression.description = 'Some description'
         end
         it { should be_valid }
      end
     describe "is valid empty" do
         before do
-          @formula.descr = ''
+          @expression.description = ''
         end
         it { should be_valid }
      end
@@ -76,13 +84,13 @@ describe "Formula model" do
   describe "OpenMath" do
     describe "is valid filled" do
         before do
-          @formula.omath = 'Some description'
+          @expression.omath = 'Some description'
         end
         it { should be_valid }
      end
     describe "is invalid empty" do
         before do
-          @formula.omath = ''
+          @expression.omath = ''
         end
         it { should_not be_valid }
      end
@@ -92,11 +100,30 @@ describe "Formula model" do
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   describe "toJSON method" do
     it "should return proper content" do
-      @formula.toJSON().should_not be_empty
+      @expression.toJSON().should_not be_empty
     end
 
   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  describe "position" do
+    it "should have a valid position" do
+      @expression.position_left.should >=(0.0)
+      @expression.position_top.should >=(0.0)
+    end
+  end
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  describe "parent context" do
+    it "should have a parent context" do
+      @expression.context_id.should >=(0)
+    end
+  end
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  
+  
   
 end # describe "File model"
 # ========================================================================= 

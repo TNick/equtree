@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: sheets
+#
+#  id         :integer          not null, primary key
+#  context_id :integer
+#  dfile_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 
 
 # ========================================================================= 
@@ -33,7 +44,8 @@
 #  updated_at  :datetime         not null
 #
 class Sheet < ActiveRecord::Base
-  
+  before_create :allocStorage
+  around_destroy :releaseStorage
   #
   #
   #
@@ -49,10 +61,10 @@ class Sheet < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :description
+  attr_accessible :context_id, :dfile_id
   
-  # zero or more formulas in each sheet
-  has_many :formulas
+  belongs_to :dfile
+  has_one :context
   
   #  ATTRIBUTES    ========================================================
   #
@@ -61,7 +73,11 @@ class Sheet < ActiveRecord::Base
   #
   #  VALIDATION    --------------------------------------------------------
 
-
+  # don't check for the context; it gets created after the validation
+  #validates :context_id, 
+  #                  presence: true
+  validates :dfile_id, 
+                    presence: true
 
   #  VALIDATION    ========================================================
   #
@@ -78,22 +94,48 @@ class Sheet < ActiveRecord::Base
   #  PRIVATE HELPERS    ---------------------------------------------------
 
   # -----------------------------------------------------------------------
+  # get associated context
+  def mainContext
+    return Context.find( context_id )
+  end
+  # =======================================================================
+
+  # -----------------------------------------------------------------------
   # convert the conent of this sheet to JSON
   def toJSON
-    frm_ary = []
-    formulas.each do |formula|
-      frm_ary += formula.toJSON()
-    end
-    result = {
-          description: description,
-          formulas: frm_ary,
-          file_type: 'mathsheet'
-      }
-    return result
+    
+    ctx = mainContext
+    return ctx.toJSON()
+
+    #frm_ary = []
+    #formulas.each do |formula|
+    #  frm_ary += formula.toJSON()
+    #end
+    #result = {
+          #description: description,
+          #formulas: frm_ary,
+          #file_type: 'mathsheet'
+    #  }
+    #return result
   end
   # =======================================================================
 
 private
+
+  # -----------------------------------------------------------------------
+  def allocStorage
+    ctx = Context.create
+    self.context_id = ctx.id
+  end
+  # =======================================================================
+  
+  # -----------------------------------------------------------------------
+  def releaseStorage
+    ctx = Context.find( self.context_id )
+    ctx.destroy
+  end
+  # =======================================================================
+
 
 
   #  PRIVATE HELPERS    ===================================================

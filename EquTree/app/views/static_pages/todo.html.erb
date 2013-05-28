@@ -36,6 +36,7 @@ function initDoc() {
   oDoc = document.getElementById("textBox");
   sDefTxt = oDoc.innerHTML;
   if (document.compForm.switchMode.checked) { setDocMode(true); }
+  loadTodoFromBrowser();
 }
  
 function formatDoc(sCmd, sValue) {
@@ -81,11 +82,48 @@ function printDoc() {
   oPrntWin.document.close();
 }
 
+function loadTodoFromBrowser() {
+  if ( supports_html5_storage() ) {
+    var content = localStorage["todo.content"];
+    if ( content && ( content !== '' ) )
+    {
+      $('#textBox').html(content);
+      msgInfo( "The content was loaded from browser cache");
+    }
+    else
+    {
+      msgInfo( "The content was loaded from saved page");
+    }
+  }
+}
+
+function saveTodoToBrowser() {
+  if ( supports_html5_storage() ) {
+    var content = $('#textBox').html();
+    localStorage["todo.content"] = content;
+    msgInfo( "The content was saved to browser cache");
+  } else {
+    msgError( "Local storage is not available in this browser" );
+  }
+}
+
+function clearSavedTodo() {
+  if ( supports_html5_storage() ) {
+    var content = $('#textBox').html();
+    localStorage["todo.content.undo"] = content;
+    localStorage["todo.content"] = "";
+    location.reload();
+  } else {
+    msgError( "Local storage is not available in this browser" );
+  }
+}
+
 
 $(function () {
   initDoc();
 });
 </script>
+
 <style type="text/css">
 .intLink { cursor: pointer; }
 img.intLink { border: 0; }
@@ -179,236 +217,9 @@ vPP4veffxpX77z6l5JewHPu8MqTDAwMDLzyrjb/mZm0JcT5Lj+89+Ybm6zz95oMh7s4XbygN3Sluq4Mj
 <!-- ################################################################################################### -->
 <!-- ################################################################################################### -->
 <!-- ################################################################################################### -->
-<div id="textBox" contenteditable="true" style="width:100%; height:600px;">
+<div id="textBox" contenteditable="true" style="width:90%; height:400px; padding:5%;">
 
-
-
-
-  <ul>
-    <li>
-      position of expressions and context; rows in tables;
-    </li>
-    <li>
-      when to save the sheet?
-      <ul>
-        <li>
-          save button;
-        </li>
-        <li>
-          on each change
-        </li>
-        <li>
-          on a timer
-        </li>
-        Catch leave page events
-      </ul>
-    </li>
-    <li>
-      cache POST requests?
-    </li>
-    <li>
-      unified message system for all sources
-    </li>
-    <li>
-      panel for associated content; maximize; allow to edit the content if 
-      owner has right to; a way to set associated content
-    </li>
-    <li>
-      panel for editing and brief information
-    </li>
-    <li>
-      two types of paths: incoming (bring info) and outgoing (exports information)
-    </li>
-    <li>
-      user preferences page
-      <ul>
-        <li>
-          own colors
-        </li>
-        <li>
-          jQuery UI themes
-        </li>
-        <li>
-          ...?
-        </li>
-        
-      </ul>
-    </li>
-    <li>
-      each symbol should know the path to where it is defined
-    </li>
-    <li>
-      tree for expressions: context, symbols
-    </li>
-    <li>
-      multiple selection in file; current item
-    </li>
-    <li>
-      have a top level context inside file
-    </li>
-    <li>
-      external references should be inserted in each context and should be 
-      visible only inside that context and child&nbsp;contexts; define them in 
-      tables;
-    </li>
-    <li>
-      inclusion files tip somewhere; files that only group information for
-      ease of use (something like header files in c)
-    </li>
-    <li>
-      what happens if the POST request takes long?
-    </li>
-    <li>
-      allow freezing panels; context or info that decouples from tracking 
-      current item and shows whatever it has; define some shortcut
-    </li>
-    <li>
-      permision model; public, allowed to some; private; allowed to view
-      or to view and edit
-    </li>
-    <li>
-      trash where files/directories go; empty trash; restore
-    </li>
-    <li>
-      undo/redo in files tree
-    </li>
-    <li>
-      copy, cut, paste in file tree (clipboard)
-    </li>
-    <li>
-      new directories go to top, new files go to bottom of files tree
-      or sort the tree after each update</li>
-    
-    
-  </ul><h1>Models-Tables</h1><h2>users</h2>
-<div>
-<ul>
-<li>
-<span style="font-size: 14px;">
-id</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-name</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-email</span>
-<br>
-</li><li><span style="font-size: 14px;">password_digest</span>&nbsp;<br></li><li><span style="font-size: 14px;">remember_token</span>&nbsp;<br></li><li><b>admin</b>: tell if this user is admin or not<br></li>
-<li>
-<span style="font-size: 14px;">
-created_at</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-updated_at</span>&nbsp;</li>
-</ul>
-</div>
-<h2>
-directories</h2>
-<div>
-<ul>
-<li>
-<span style="font-size: 14px;">
-id</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-name</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;"><b>
-user_id</b>:</span>&nbsp;parent user index<br>
-</li><li><span style="font-size: 14px;"><b>ancestry</b></span>: used to organise the directories in a tree without complicated nested models; stores a path where components are the indices of the directories<br></li>
-<li>
-<span style="font-size: 14px;">
-created_at</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-updated_at</span>&nbsp;</li>
-</ul>
-<h2>
-dfiles</h2>
-</div>
-<div>
-<div>
-<ul>
-<li>
-<span style="font-size: 14px;">
-id</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-name</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;"><b>
-directory_id</b></span>: parent directory index<br>
-</li>
-<li>
-<span style="font-size: 14px;"><b>
-ftype</b>:&nbsp;the</span>&nbsp;type of this file; this is an integer that indicates the table that hosts actual content<br>
-</li><li><span style="font-size: 14px;"><b>type_index</b></span>: the index inside the table that hosts actual content<br></li>
-<li>
-<span style="font-size: 14px;">
-created_at</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-updated_at</span>&nbsp;</li>
-</ul>
-</div>
-</div>
-<h2>
-sheets</h2>
-<div>
-<div>
-<ul>
-<li>
-<span style="font-size: 14px;">
-id</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;"><b>
-description</b></span>: general description of this sheet; this is html content that gets presented when there is no current item in the user interface<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-created_at</span>
-<br>
-</li>
-<li>
-<span style="font-size: 14px;">
-updated_at</span>
-<br>
-</li>
-</ul>
-</div>
-</div>
-<div>
-<br>
-</div>
-<div>
-<br>
-</div>
-
-                                                                                                              
-  
-  
-  
-  
+<%= render 'todo' %>
   
 </div>
 <!-- ################################################################################################### -->
@@ -418,8 +229,15 @@ updated_at</span>
 <p id="editMode"><input type="checkbox" name="switchMode" id="switchBox" onchange="setDocMode(this.checked);" /> 
 <label for="switchBox">Show HTML</label></p>
 <!--p><input type="submit" value="Send" /></p-->
+
 </form>
-  
+<div onclick="saveTodoToBrowser();" style="padding:1em; border:1px solid black; display: inline-block; cursor: pointer;">
+Save to browser
+</div>
+<div onclick="clearSavedTodo();" style="padding:1em; border:1px solid black; display: inline-block; cursor: pointer;">
+Clear saved
+</div> 
+
 <%-#  CONTENT    ========================================================== -%>
 <%-#                                                                        -%>
 <%-#                                                                        -%>

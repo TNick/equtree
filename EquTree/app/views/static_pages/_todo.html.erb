@@ -1,0 +1,226 @@
+
+
+
+  <ul>
+    <li>
+      position of expressions and context; rows in tables;
+    </li>
+    <li>
+      when to save the sheet?
+      <ul>
+        <li>
+          save button;
+        </li>
+        <li>
+          on each change
+        </li>
+        <li>
+          on a timer
+        </li>
+        Catch leave page events
+      </ul>
+    </li>
+    <li>
+      cache POST requests?
+    </li>
+    <li>
+      unified message system for all sources
+    </li>
+    <li>
+      panel for associated content; maximize; allow to edit the content if 
+      owner has right to; a way to set associated content
+    </li>
+    <li>
+      panel for editing and brief information
+    </li>
+    <li>
+      two types of paths: incoming (bring info) and outgoing (exports information)
+    </li>
+    <li>
+      user preferences page
+      <ul>
+        <li>
+          own colors
+        </li>
+        <li>
+          jQuery UI themes
+        </li>
+        <li>
+          ...?
+        </li>
+        
+      </ul>
+    </li>
+    <li>
+      each symbol should know the path to where it is defined
+    </li>
+    <li>
+      tree for expressions: context, symbols
+    </li>
+    <li>
+      multiple selection in file; current item
+    </li>
+    <li>
+      have a top level context inside file
+    </li>
+    <li>
+      external references should be inserted in each context and should be 
+      visible only inside that context and child&nbsp;contexts; define them in 
+      tables;
+    </li>
+    <li>
+      inclusion files tip somewhere; files that only group information for
+      ease of use (something like header files in c)
+    </li>
+    <li>
+      what happens if the POST request takes long?
+    </li>
+    <li>
+      allow freezing panels; context or info that decouples from tracking 
+      current item and shows whatever it has; define some shortcut
+    </li>
+    <li>
+      permision model; public, allowed to some; private; allowed to view
+      or to view and edit
+    </li>
+    <li>
+      trash where files/directories go; empty trash; restore
+    </li>
+    <li>
+      undo/redo in files tree
+    </li>
+    <li>
+      copy, cut, paste in file tree (clipboard)
+    </li>
+    <li>
+      new directories go to top, new files go to bottom of files tree
+      or sort the tree after each update</li>
+    
+    
+  </ul><h1>Models&nbsp;and Tables</h1><h2>users</h2><div>This table stores the list of users and their attributes, like name, e-mail, password, administrative rights.&nbsp;The User also stores a list of directories.&nbsp; <br>Permissions for an user are determined using following algorithm:<br><ol><li>if the resource (file, directory) belongs to current user then it has the right to view and edit</li><li>if the resource belongs to a different user:</li><ol><li>if current user is in the list of special users for current resources then the right stored there is used (view or view and edit)</li><li>if the resource is publicly editable everyone can edit it</li><li>if the resource is publicly viewable then everyone may view it but not edit it</li></ol></ol><br></div>
+<div>
+<ul>
+<li>
+<span style="font-size: 14px;"><b>
+id</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+name</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+email</b></span>
+<br>
+</li><li><span style="font-size: 14px;"><b>password_digest</b></span>&nbsp;<br></li><li><span style="font-size: 14px;"><b>remember_token</b></span>&nbsp;<br></li><li><b>admin</b>: tell if this user is admin or not<br></li>
+<li>
+<span style="font-size: 14px;"><b>
+created_at</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+updated_at</b></span>&nbsp;</li>
+</ul>
+</div>
+<h2>
+directories</h2><div>Directories are a form of&nbsp;organizing&nbsp;content. They may contain other directories and files. There is no limit to the nesting level. The interface allows storing permissions for directories but the process walks the tree and assigns those permissions to individual files. There is no permission stored at directory level.<br></div>
+<div>
+<ul>
+<li>
+<span style="font-size: 14px;"><b>
+id</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+name</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+user_id</b>:</span>&nbsp;parent user index<br>
+</li><li><span style="font-size: 14px;"><b>ancestry</b></span>: used to&nbsp;organize&nbsp;the directories in a tree without complicated nested models; stores a path where components are the indices of the directories<br></li><li><b>list of files</b><br></li>
+<li>
+<span style="font-size: 14px;"><b>
+created_at</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+updated_at</b></span>&nbsp;</li>
+</ul>
+<h2>
+dfiles</h2><div>Files are abstract constructs. They know nothing about their content except the table where it is stored and the index inside that table. Whatever generic information about files is stored inside this table.<br></div>
+</div>
+<div>
+<div>
+<ul>
+<li>
+<span style="font-size: 14px;"><b>
+id</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+name</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+directory_id</b></span>: parent directory index<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+ftype</b>:&nbsp;the</span>&nbsp;type of this file; this is an integer that indicates the table that hosts actual content<br>
+</li><li><span style="font-size: 14px;"><b>type_index</b></span>: the index inside the table that hosts actual content</li><li><b>special_users</b>: stores the list of users that have special rights regarding the file. Each entry consists of the user ID and the right that it has (view or view and edit). If the file is available to public then this list is ignored.</li><li><b>public_policy</b>: global rights for other users; this may be: <br><ul><li>0 - private</li><li>1 - public may view it</li><li>2 - public may view and edit it</li></ul></li>
+<li>
+<span style="font-size: 14px;"><b>
+created_at</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+updated_at</b></span>&nbsp;</li>
+</ul>
+</div>
+</div>
+<h2>
+sheets</h2><div>One specific type of file is a math sheet. A file points to an entry inside this table to assign math sheet type to that file.<br></div><div>The information inside the sheet is organized in a tree of nested contexts. The sheet itself hosts the root context.<br></div>
+<div>
+<div>
+<ul>
+<li>
+<span style="font-size: 14px;"><b>
+id</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+description</b></span>: general description of this sheet; this is html content that gets presented when there is no current item in the user interface<br>
+</li><li><b>context_id</b>:&nbsp;the id of the root context</li>
+<li>
+<span style="font-size: 14px;"><b>
+created_at</b></span>
+<br>
+</li>
+<li>
+<span style="font-size: 14px;"><b>
+updated_at</b></span>
+<br>
+</li>
+</ul>
+</div>
+</div>
+<h2>contexts</h2><div>Just like directories for the files, the contexts group other contexts, expressions and imports.<br></div><div><ul><li><span style="font-size: 14px;"><b>id</b></span></li><li><span style="font-size: 14px;"><b>sheet_id:</b></span><span style="font-size: 14px;"> The id of the parent sheet where this context belongs.<b><br></b></span></li><li><span style="font-size: 14px;"><b>ancestry</b></span>: used to organize the contexts in a tree without complicated nested models; stores a path where components are the indices of the parent contexts</li><li>list of expressions<br></li><li>list of imports<br></li><li><b>description</b>:&nbsp;the html that describes the context; this may not contain dynamic elements like javascript or other scripting language.</li><li><b>info_uri</b>:&nbsp;link to further reading about this context; if the description is empty then the page indicated by the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">uri</a> replaces it in User Interface (UI); if 
+the description is not empty the link is placed at the bottom of the description.&nbsp;</li><li><b>position</b>: the placement of top left corner inside UI</li><li><b>size</b>: the size of the rectangle for&nbsp;the context</li><li><span style="font-size: 14px;"><b>created_at</b></span><br></li><li><span style="font-size: 14px;"><b>updated_at</b></span><br></li></ul></div><h2>expressions</h2><div>The expressions hold actual mathematical content. They also have a position assigned inside parent context and a graphical representation. Expressions are stored using <a href="http://en.wikipedia.org/wiki/Polish_notation">prefix notation</a>.</div><li><span style="font-size: 14px;"><b>id</b></span> <br></li><li><b>context_id</b>: the id of the parent context</li><li><b>omath</b>: the expression as OpenMath XML.<br></li><li><b>description</b>:&nbsp;the html that describes the context; this may not contain dynamic elements like javascript or other scripting language.</li><li><b>info_uri</b>:&nbsp;link to further reading about this expression; if the description is empty 
+then the page indicated by the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">uri</a> replaces it in User Interface (UI); if the description is not empty the link is placed at the bottom of the description.&nbsp;<br></li><li><b>position</b>:&nbsp;placement of the element inside container (the context)</li><li><span style="font-size: 14px;"><b>created_at</b></span><span style="font-size: 14px;">&nbsp;</span><br></li><li><span style="font-size: 14px;"><b>updated_at</b></span>&nbsp;</li><h2>imports</h2><div>Imports are contexts whose content is merged with the content of the context where the import is placed.<span style="font-size: 14px;">&nbsp;</span><span style="font-size: 14px;">The expressions may then use other expressions in that context as if they were actual expressions in current context. </span>The context may be from another file and from another user, if the permissions allow current user to view that file.<br><u>Broken imports</u> are imports that reference contexts where 
+current user does not have access.<br></div><li><span style="font-size: 14px;"><b>id</b></span><span style="font-size: 14px;">&nbsp;</span></li><li><b>context_id</b>: the id of the parent context</li><li><span style="font-size: 14px;"><b>imported_context_id</b></span>: the id of the context that we're importing using this element</li><li><b>position</b>:&nbsp;placement of the element inside container (the context)<br></li><li><span style="font-size: 14px;"><b>created_at</b></span><span style="font-size: 14px;">&nbsp;</span><br></li><li><span style="font-size: 14px;"><b>updated_at</b></span>&nbsp;</li><div><br></div>
+<div>
+<br>
+</div>
+
+
+  
