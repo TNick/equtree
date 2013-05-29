@@ -28,9 +28,9 @@
 #  id         :integer          not null, primary key
 #  name       :string(255)
 #  user_id    :integer
+#  ancestry   :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  ancestry   :string(255)
 #
 
 class Directory < ActiveRecord::Base
@@ -60,7 +60,9 @@ class Directory < ActiveRecord::Base
   belongs_to :user
   
   # files are rooted here
-  has_many :dfiles
+  has_many :dfiles, :dependent => :delete_all
+  # WARNING This may not call callbacks => associated sheets are not deleted
+  
   
   #  ATTRIBUTES    ========================================================
   #
@@ -77,7 +79,7 @@ class Directory < ActiveRecord::Base
   validates :user_id, 
                     presence: true
 
- 
+  
   #  VALIDATION    ========================================================
   #
   #
@@ -92,6 +94,10 @@ class Directory < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
+  def createChild ( name )
+    return user.directories.create name: name, parent_id: id
+  end
+  
 private
 
 
