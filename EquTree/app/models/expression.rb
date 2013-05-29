@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: expressions
-#
-#  id            :integer          not null, primary key
-#  context_id    :integer
-#  omath         :text
-#  description   :text
-#  info_uri      :text
-#  position_left :float
-#  position_top  :float
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#
-
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -70,7 +55,7 @@ class Expression < ActiveRecord::Base
   attr_accessible :description, :omath, :info_uri, :position_left, :position_top
   
   # any formula is part of a context
-  belongs_to :context
+  belongs_to :context, :dependent => :destroy
   
   #  ATTRIBUTES    ========================================================
   #
@@ -114,7 +99,7 @@ class Expression < ActiveRecord::Base
         left: position_left,
         top: position_top
       }
-    
+    return result
   end
   
   

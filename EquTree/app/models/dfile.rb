@@ -18,7 +18,7 @@
 # 
 #
 #  CLASS    ---------------------------------------------------------------
-
+ 
 # models the data associated with a directory
 #
 # == Schema Information
@@ -37,9 +37,7 @@
 #
 
 class Dfile < ActiveRecord::Base
-  after_save :allocStorage
-  around_destroy :releaseStorage
-  
+ 
   #
   #
   #
@@ -51,6 +49,10 @@ class Dfile < ActiveRecord::Base
   FTYPE_SHEET = 2
   FTYPE_MAX = 3
   
+  PP_PRIVATE = 0
+  PP_MAYVIEW = 1
+  PP_MAYEDIT = 2
+  
   #  DEFINITIONS    =======================================================
   #
   #
@@ -60,7 +62,7 @@ class Dfile < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :name, :ftype, :type_index
+  attr_accessible :name, :ftype, :type_index, :special_users, :public_policy
   # :directory_id is not accesible
   # type_index is the index of the file in its dedicated table
   
@@ -69,7 +71,7 @@ class Dfile < ActiveRecord::Base
   belongs_to :directory
   
   # special users is an array of entries in form user_id - permission
-  serialize :special_users, :special_users
+  # serialize :special_users, :SpecialUsers
   
   #  ATTRIBUTES    ========================================================
   # 
@@ -105,7 +107,8 @@ class Dfile < ActiveRecord::Base
   #
   #  MODIFIERS    ---------------------------------------------------------
 
-
+  after_save :allocStorage
+  around_destroy :releaseStorage
   
   #  MODIFIERS    =========================================================
   #
@@ -135,7 +138,7 @@ class Dfile < ActiveRecord::Base
     case ftype
     when FTYPE_SHEET
       return Sheet.find_by_id(type_index)
-    else # 
+    else #  
       return nil
     end
   end
@@ -156,11 +159,14 @@ private
     d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     d "allocate storage for file"
     d self.id
+    d "file type"
+    d self.ftype
+    d "type index"
     d self.type_index
     d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
     case self.ftype
     when FTYPE_SHEET
-      if self.type_index == -1
+      if ( ( not self.type_index ) or ( self.type_index == -1 ) )
         sheet = Sheet.create( dfile_id: self.id )
         self.type_index = sheet.id
         self.save()
@@ -172,6 +178,7 @@ private
     else
       self.type_index = -1
     end
+    return true
   end
   # =======================================================================
   
@@ -194,7 +201,7 @@ private
         sheet.destroy
       end
     end
-    
+    return true
   end
   # =======================================================================
 

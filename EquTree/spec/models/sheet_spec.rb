@@ -1,14 +1,3 @@
-# == Schema Information
-#
-# Table name: sheets
-#
-#  id         :integer          not null, primary key
-#  context_id :integer
-#  dfile_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -16,6 +5,17 @@
 #  \author		TNick
 #
 #  \brief		RSpec Tests for Sheet data model
+#
+# == Schema Information
+#
+# Table name: sheets
+#
+#  id         :integer          not null, primary key
+#  context :integer
+#  dfile_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 #
 #  INCLUDES    -----------------------------------------------------------
 
@@ -46,7 +46,7 @@ describe "Sheet model" do
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # check the fields
-  it { should respond_to( :context_id ) }
+  it { should respond_to( :context ) }
   it { should respond_to( :dfile_id ) }
   it { should respond_to( :created_at ) }
   it { should respond_to( :updated_at ) }

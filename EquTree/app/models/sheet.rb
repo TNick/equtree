@@ -1,16 +1,3 @@
-# == Schema Information
-#
-# Table name: sheets
-#
-#  id         :integer          not null, primary key
-#  context_id :integer
-#  dfile_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-
-
-
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -38,14 +25,14 @@
 #
 # Table name: sheets
 #
-#  id          :integer          not null, primary key
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id         :integer          not null, primary key
+#  context    :integer
+#  dfile_id   :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 class Sheet < ActiveRecord::Base
-  before_create :allocStorage
-  around_destroy :releaseStorage
+  
   #
   #
   #
@@ -61,10 +48,13 @@ class Sheet < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :context_id, :dfile_id
+  attr_accessible :context, :dfile_id
   
+  # associated with a file
   belongs_to :dfile
-  has_one :context
+  
+  # master context is embedded here
+  has_one :context, :dependent => :destroy
   
   #  ATTRIBUTES    ========================================================
   #
@@ -74,7 +64,7 @@ class Sheet < ActiveRecord::Base
   #  VALIDATION    --------------------------------------------------------
 
   # don't check for the context; it gets created after the validation
-  #validates :context_id, 
+  #validates :context, 
   #                  presence: true
   validates :dfile_id, 
                     presence: true
@@ -85,7 +75,10 @@ class Sheet < ActiveRecord::Base
   #
   #
   #  MODIFIERS    ---------------------------------------------------------
-
+  
+  # create master context
+  before_create :createResources
+  
   #  MODIFIERS    =========================================================
   #
   #
@@ -96,7 +89,7 @@ class Sheet < ActiveRecord::Base
   # -----------------------------------------------------------------------
   # get associated context
   def mainContext
-    return Context.find( context_id )
+    return Context.find( context )
   end
   # =======================================================================
 
@@ -123,19 +116,12 @@ class Sheet < ActiveRecord::Base
 private
 
   # -----------------------------------------------------------------------
-  def allocStorage
-    ctx = Context.create
-    self.context_id = ctx.id
+  def createResources
+    self.context = create_context( 
+      position_left: 0.0, position_top: 0.0, 
+      size_width: 50.0, size_height: 50.0)
   end
   # =======================================================================
-  
-  # -----------------------------------------------------------------------
-  def releaseStorage
-    ctx = Context.find( self.context_id )
-    ctx.destroy
-  end
-  # =======================================================================
-
 
 
   #  PRIVATE HELPERS    ===================================================

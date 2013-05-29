@@ -1,0 +1,18 @@
+u = User.find(1)
+d = u.directories[0]
+fs = d.dfiles[0]
+sh = fs.getSheet
+ctx = sh.context
+expr = ctx.expressions[0]
+
+
+
+u = User.create( name: "User Unu", email: "user@unu.com", password: "abcdefg", password_confirmation: "abcdefg", admin: false )
+d = u.directories.create name: "Test dir"
+fs = d.dfiles.create name: "Test file", ftype: 2
+sh = fs.getSheet
+ctx = sh.context( description: "Descr", info_uri: "http://www.c.com", position_left: 0.0, position_top: 0.0, size_width: 50.0, size_height: 50.0 )
+ctx2 = ctx.children.create( sheet: sh, description: "Descr", info_uri: "http://www.c.com", position_left: 0.0, position_top: 0.0, size_width: 50.0, size_height: 50.0 )
+ctx2 = ctx.createSubContext( description: "Descr", info_uri: "http://www.c.com", position_left: 0.0, position_top: 0.0, size_width: 50.0, size_height: 50.0 )
+expr = ctx.create_expression 
+

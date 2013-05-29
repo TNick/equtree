@@ -1,3 +1,11 @@
+# ========================================================================= 
+# ------------------------------------------------------------------------- 
+#
+#  \date		May 2013
+#  \author		TNick
+#
+#  \brief		RSpec Tests for Dfile data model
+#
 # == Schema Information
 #
 # Table name: dfiles
@@ -11,15 +19,6 @@
 #  public_policy :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#
-
-# ========================================================================= 
-# ------------------------------------------------------------------------- 
-#
-#  \date		May 2013
-#  \author		TNick
-#
-#  \brief		RSpec Tests for Dfile data model
 #
 require 'spec_helper'
 

@@ -64,7 +64,7 @@ FactoryGirl.define do
   # create an entry of Sheet kind
   factory :sheet do
   
-    context_id              0
+    context                 0
     dfile_id                0
 	
   end

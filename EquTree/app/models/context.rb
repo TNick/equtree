@@ -1,20 +1,3 @@
-# == Schema Information
-#
-# Table name: contexts
-#
-#  id            :integer          not null, primary key
-#  sheet_id      :integer
-#  ancestry      :text
-#  description   :text
-#  info_uri      :text
-#  position_left :float
-#  position_top  :float
-#  size_width    :float
-#  size_height   :float
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#
-
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
@@ -40,15 +23,17 @@
 #
 # == Schema Information
 #
-# Table name: expressions
+# Table name: contexts
 #
 #  id            :integer          not null, primary key
-#  context_id    :integer
-#  omath         :text
+#  sheet_id      :integer
+#  ancestry      :text
 #  description   :text
 #  info_uri      :text
 #  position_left :float
 #  position_top  :float
+#  size_width    :float
+#  size_height   :float
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
@@ -69,10 +54,20 @@ class Context < ActiveRecord::Base
    
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :description, :info_uri, :position_left, :position_top, :size_width, :size_height
+  attr_accessible :description, :parent_id, :info_uri, :position_left, :position_top, :size_width, :size_height
+  
+  # will be arranged in a tree
+  has_ancestry
   
   # any context is part of a sheet
   belongs_to :sheet
+  
+  # expressions are rooted here
+  has_many :expressions
+  
+  # imports are rooted here
+  # has_many :imports
+  
   
   #  ATTRIBUTES    ========================================================
   #
@@ -110,14 +105,43 @@ class Context < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
+  # -----------------------------------------------------------------------
   def toJSON
+    kids_c = []
+    children.each do |kid|
+      kids_c.push( kid.toJSON() )
+    end
+    kids_e = []
+    expressions.each do |kid|
+      kids_e.push( kid.toJSON() )
+    end
+    #kids_i = []
+    #imports.each do |kid|
+    #  kids_i.push( kid.toJSON() )
+    #end
     result = {
-        descr: descr,
-        omath: omath
+        description: description,
+        info_uri: info_uri,
+        
+        position_left: position_left,
+        position_top: position_top, 
+        size_width: size_width, 
+        size_height: size_height,
+        
+        # imports: kids_i, 
+        expressions: kids_e,
+        contexts: kids_c
+        
       }
-    
+    return result
   end
+  # =======================================================================
   
+  # -----------------------------------------------------------------------
+  def createSubContext
+    ctx2 = children.create( sheet: sheet )
+  end
+  # =======================================================================
   
 private
 

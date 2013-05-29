@@ -77,7 +77,7 @@ class Directory < ActiveRecord::Base
   validates :user_id, 
                     presence: true
 
-
+ 
   #  VALIDATION    ========================================================
   #
   #
