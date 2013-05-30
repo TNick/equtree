@@ -54,7 +54,8 @@ class Sheet < ActiveRecord::Base
   belongs_to :dfile
   
   # master context is embedded here
-  has_one :context, :dependent => :destroy
+  #has_one :context, :dependent => :destroy
+  has_many :contexts, dependent: :delete_all
   
   #  ATTRIBUTES    ========================================================
   #

@@ -1,10 +1,10 @@
 # ========================================================================= 
 # ------------------------------------------------------------------------- 
 #
-#  \date		May 2013
-#  \author		TNick
+#  \date        May 2013
+#  \author      TNick
 #
-#  \brief		Code for user model
+#  \brief       Code for a directory
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,22 +19,21 @@
 #
 #  CLASS    ---------------------------------------------------------------
 
-# models the data associated with an user
+# models the data associated with a sheet
 #
 # == Schema Information
 #
-# Table name: users
+# Table name: expressions
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  email           :string(255)
-#  password_digest :string(255)
-#  remember_token  :string(255)
-#  admin           :boolean
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id            :integer          not null, primary key
+#  context_id    :integer
+#  imported_context_id    :integer
+#  position_left :float
+#  position_top  :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-class User < ActiveRecord::Base
+class Import < ActiveRecord::Base
   
   #
   #
@@ -42,24 +41,20 @@ class User < ActiveRecord::Base
   #
   #  DEFINITIONS    -------------------------------------------------------
   
-  # a regex for a valid e-mail
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-
   #  DEFINITIONS    =======================================================
   #
   #
   #
   #
   #  ATTRIBUTES    --------------------------------------------------------
+   
   
   # the list of attributes that are accesible for get/set
-  attr_accessible :email, :name, :password, :password_confirmation
-
-  # use MD5 storage instead of plain passwords
-  has_secure_password
-
-  # user is parent for directories; destro them all if user is destroied
-  has_many :directories, dependent: :delete_all
+  attr_accessible :context_id, :imported_context_id, :position_left, :position_top
+  
+  
+  # any import is part of a context
+  belongs_to :context
   
   #  ATTRIBUTES    ========================================================
   #
@@ -68,38 +63,25 @@ class User < ActiveRecord::Base
   #
   #  VALIDATION    --------------------------------------------------------
 
-  # there must always be a name that is between 2 and 50 characters long
-  validates :name,	presence: true, 
-					length: { minimum: 2, maximum: 50 }
-
-  # there must always be an email that is unique in our database;
-  # we treat the email as case-insensitive and we check this against 
-  # a simple pattern
-  validates :email, presence: true,
-                    uniqueness: { case_sensitive: false },
-                    format: { with: VALID_EMAIL_REGEX }
-
-  # the password must be at least six characters long
-  validates :password, 
-                    presence: true,
-					length: { minimum: 6 }
-
-  # always confirm the password
-  validates :password_confirmation,
-					presence: true
-
+  # the parent context should be valid
+  validates :context_id,  presence: true
+  
+  # the context that we're importing
+  validates :imported_context_id,  presence: true
+  
+  # there must always be a position
+  validates :position_left,  presence: true
+  
+  # there must always be a position
+  validates :position_top,  presence: true
+  
+  
   #  VALIDATION    ========================================================
   #
   #
   #
   #
   #  MODIFIERS    ---------------------------------------------------------
-
-  # make sure that the emmail is stores in the database in lower case form
-  before_save { |user| user.email = email.downcase }
-
-  # create a token to identify the user
-  before_save :create_remember_token
 
   #  MODIFIERS    =========================================================
   #
@@ -108,18 +90,22 @@ class User < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
-private
-
-
   # -----------------------------------------------------------------------
-  # create a token to identify the user
-  def create_remember_token
-
-    # Create the token.
-    self.remember_token = SecureRandom.urlsafe_base64
-
-  end # def create_remember_token
+  # returns the content of the instance as a hash, appropriate for sending 
+  # to the client
+  def to_hash()
+    result = {
+        id: self.id,
+        context_id: self.context_id,
+        imported_context_id: self.imported_context_id,
+        position_left: self.position_left,
+        position_top: self.position_top
+      }
+    return result
+  end # def to_hash
   # =======================================================================
+  
+private
 
 
   #  PRIVATE HELPERS    ===================================================
@@ -128,7 +114,7 @@ private
   #
   #
   
-end # class User
+end # class Expression
 
 #  CLASS    ===============================================================
 #
@@ -137,3 +123,4 @@ end # class User
 #
 # ------------------------------------------------------------------------- 
 # ========================================================================= 
+

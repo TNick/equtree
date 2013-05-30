@@ -60,6 +60,9 @@ describe "Expression model" do
   it { should respond_to( :updated_at ) }
   
   it { should be_valid }
+  it "should be a Expression" do
+    @expression.is_a?(Expression).should be_true 
+  end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,12 +100,41 @@ describe "Expression model" do
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "toJSON method" do
+  describe "to_hash method" do
     it "should return proper content" do
-      @expression.toJSON().should_not be_empty
+      @expression.to_hash().should_not be_empty
     end
-
-  end
+    it "should include specific information" do
+      @expression.to_hash().to_s().should include("id")
+      @expression.to_hash().to_s().should include("context_id")
+      @expression.to_hash().to_s().should include("omath")
+      @expression.to_hash().to_s().should include("description")
+      @expression.to_hash().to_s().should include("info_uri")
+      @expression.to_hash().to_s().should include("position_left")
+      @expression.to_hash().to_s().should include("position_top")
+    end
+    
+    describe "returned values" do
+      before do
+        @expression.omath = "$$the math goes here$$"
+        @expression.description = "Import description"
+        @expression.info_uri = "http://www.google.com"
+        @expression.position_left = "50.1"
+        @expression.position_top = "60.1"
+        @str_repr = @expression.to_hash().to_s()
+      end
+      
+      it "should contain the values that we set" do
+        @str_repr.should include("$$the math goes here$$")
+        @str_repr.should include("Import description")
+        @str_repr.should include("http://www.google.com")
+        @str_repr.should include("50.1")
+        @str_repr.should include("60.1")
+      end
+      
+    end # describe "returned values" do
+    
+  end # describe "to_hash method" do
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

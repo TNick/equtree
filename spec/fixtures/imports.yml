@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  context_id: 1
+  imported_context_id: 1
+  position_left: 1.5
+  position_top: 1.5
+
+two:
+  context_id: 1
+  imported_context_id: 1
+  position_left: 1.5
+  position_top: 1.5

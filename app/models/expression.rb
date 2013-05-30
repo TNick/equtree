@@ -91,16 +91,22 @@ class Expression < ActiveRecord::Base
   #
   #  PRIVATE HELPERS    ---------------------------------------------------
 
-  def toJSON
+  # -----------------------------------------------------------------------
+  # returns the content of the instance as a hash, appropriate for sending 
+  # to the client
+  def to_hash()
     result = {
-        descr: description,
+        id: self.id,
+        context_id: context_id,
         omath: omath,
+        description: description,
         info_uri: info_uri,
-        left: position_left,
-        top: position_top
+        position_left: position_left,
+        position_top: position_top
       }
     return result
-  end
+  end # def to_hash
+  # =======================================================================
   
   
 private

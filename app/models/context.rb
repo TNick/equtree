@@ -106,20 +106,26 @@ class Context < ActiveRecord::Base
   #  PRIVATE HELPERS    ---------------------------------------------------
 
   # -----------------------------------------------------------------------
-  def toJSON
+  # returns the content of the instance as a hash, appropriate for sending 
+  # to the client
+  def to_hash ()
+    
     kids_c = []
-    children.each do |kid|
-      kids_c.push( kid.toJSON() )
+    self.children.each do |kid|
+      kids_c.push( kid.to_hash() )
     end
     kids_e = []
-    expressions.each do |kid|
-      kids_e.push( kid.toJSON() )
+    self.expressions.each do |kid|
+      kids_e.push( kid.to_hash() )
     end
     kids_i = []
-    imports.each do |kid|
-      kids_i.push( kid.toJSON() )
+    self.imports.each do |kid|
+      kids_i.push( kid.to_hash() )
     end
+    
     result = {
+        id: id,
+        sheet_id: sheet_id,
         description: description,
         info_uri: info_uri,
         
@@ -131,15 +137,15 @@ class Context < ActiveRecord::Base
         imports: kids_i, 
         expressions: kids_e,
         contexts: kids_c
-        
       }
     return result
-  end
+    
+  end # def to_hash
   # =======================================================================
   
   # -----------------------------------------------------------------------
   def createSubContext
-    ctx2 = children.create( sheet: sheet )
+    return sheet.contexts.create parent_id: id
   end
   # =======================================================================
   
