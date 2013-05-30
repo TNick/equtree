@@ -63,10 +63,10 @@ class Context < ActiveRecord::Base
   belongs_to :sheet
   
   # expressions are rooted here
-  has_many :expressions
+  has_many :expressions, :dependent => :delete_all
   
   # imports are rooted here
-  # has_many :imports
+  has_many :imports, :dependent => :delete_all
   
   
   #  ATTRIBUTES    ========================================================
@@ -115,10 +115,10 @@ class Context < ActiveRecord::Base
     expressions.each do |kid|
       kids_e.push( kid.toJSON() )
     end
-    #kids_i = []
-    #imports.each do |kid|
-    #  kids_i.push( kid.toJSON() )
-    #end
+    kids_i = []
+    imports.each do |kid|
+      kids_i.push( kid.toJSON() )
+    end
     result = {
         description: description,
         info_uri: info_uri,
@@ -128,7 +128,7 @@ class Context < ActiveRecord::Base
         size_width: size_width, 
         size_height: size_height,
         
-        # imports: kids_i, 
+        imports: kids_i, 
         expressions: kids_e,
         contexts: kids_c
         

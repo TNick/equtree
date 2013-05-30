@@ -55,7 +55,7 @@ class Expression < ActiveRecord::Base
   attr_accessible :description, :omath, :info_uri, :position_left, :position_top
   
   # any formula is part of a context
-  belongs_to :context, :dependent => :destroy
+  belongs_to :context
   
   #  ATTRIBUTES    ========================================================
   #

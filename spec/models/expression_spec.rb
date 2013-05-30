@@ -1,3 +1,11 @@
+# ========================================================================= 
+# ------------------------------------------------------------------------- 
+#
+#  \date		May 2013
+#  \author		TNick
+#
+#  \brief		RSpec Tests for Sheet data model
+#
 # == Schema Information
 #
 # Table name: expressions
@@ -11,15 +19,6 @@
 #  position_top  :float
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#
-
-# ========================================================================= 
-# ------------------------------------------------------------------------- 
-#
-#  \date		May 2013
-#  \author		TNick
-#
-#  \brief		RSpec Tests for Sheet data model
 #
 #  INCLUDES    -----------------------------------------------------------
 
@@ -125,7 +124,7 @@ describe "Expression model" do
   
   
   
-end # describe "File model"
+end # describe "Expression model"
 # ========================================================================= 
 
 #  TESTS    ==============================================================
