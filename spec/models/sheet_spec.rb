@@ -11,7 +11,7 @@
 # Table name: sheets
 #
 #  id         :integer          not null, primary key
-#  context :integer
+#  context    :integer
 #  dfile_id   :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -36,11 +36,10 @@ describe "Sheet model" do
   let(:dfile) { FactoryGirl.create(:dfile, directory: directory, ftype: Dfile::FTYPE_SHEET ) }
   
   before do
-	# get creates sheet from file
+	# get sheet from file
 	@sheet = dfile.getSheet()
   end
-
-   
+  
   # default target for future tests
   subject { @sheet }
   
@@ -51,6 +50,9 @@ describe "Sheet model" do
   it { should respond_to( :created_at ) }
   it { should respond_to( :updated_at ) }
   it { should be_valid }
+  it "should be a Sheet" do
+    @sheet.is_a?(Sheet).should be_true 
+  end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

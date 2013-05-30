@@ -356,8 +356,14 @@ describe "File model" do
         @dfile.public_policy = Dfile::PP_PRIVATE
         @dfile.setPermissionView( @user_1 )
         @dfile.setPermissionEdit( @user_2 ) 
+        # d "{{{{{{{{{{{{{{{{{{{{{{{{{ before save }}}}}}}}}}}}}}}}}}}}}}}}}"
+        # d @dfile
         @dfile.save
+        # d "{{{{{{{{{{{{{{{{{{{{{{{{{ after save }}}}}}}}}}}}}}}}}}}}}}}}}"
+        # d @dfile
         @dfile.reload
+        # d "{{{{{{{{{{{{{{{{{{{{{{{{{ after reload }}}}}}}}}}}}}}}}}}}}}}}}}"
+        # d @dfile
       end
       
       it { @dfile.mayEdit?( @user_1 ).should be_false }
@@ -388,18 +394,10 @@ describe "File model" do
       
     end
     
-    
-    
   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
-  
-  
-  
-  
-  
-  
-
+ 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   describe "accessible attributes" do
     it "should not allow access to directory_id" do

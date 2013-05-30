@@ -78,7 +78,7 @@ class Dfile < ActiveRecord::Base
   belongs_to :directory
   
   # special users is an array of entries in form user_id - permission
-  # serialize :special_users, :SpecialUsers
+  serialize :special_users#, :SpecialUsers
   
   #  ATTRIBUTES    ========================================================
   # 
@@ -152,9 +152,9 @@ class Dfile < ActiveRecord::Base
   # =======================================================================
  
   # -----------------------------------------------------------------------
-  # get the owner of this file (will need to inspect the directopry)
+  # get the owner of this file (will need to inspect the directory)
   def getUser ()
-    return directory.user    
+    return self.directory.user    
   end
   # =======================================================================
   
@@ -162,26 +162,42 @@ class Dfile < ActiveRecord::Base
   # tell if provided user is allowed to view this file
   def mayView? ( other_user )
     if ( (not other_user.valid?) or ( other_user.is_a?(User) == false ) )
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-      # d"basic check failed"
-      # dother_user.type
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "basic check failed"
+      # d other_user.type
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return false
     end
     user = getUser()
     if ( other_user == user )
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "same user as owner"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return true
     end
-    if ( ( public_policy == Dfile::PP_MAYVIEW ) or ( public_policy == Dfile::PP_MAYEDIT ) )
+    if ( ( self.public_policy == Dfile::PP_MAYVIEW ) or ( self.public_policy == Dfile::PP_MAYEDIT ) )
       return true
     end
-    if special_users
-      special = special_users[other_user.id]
+    if self.special_users
+      special = self.special_users[other_user.id.to_s]
       if special
         if ( ( special == Dfile::PP_MAYVIEW ) or ( special == Dfile::PP_MAYEDIT ) )
           return true
+        else
+          # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          # d "User has special permission but not right one"
+          # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"    
         end
+      else
+        # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        # d "User has no special permission"
+        # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"    
       end
+      
+    else
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "no special permissions"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"    
     end
     return false
   end
@@ -191,21 +207,21 @@ class Dfile < ActiveRecord::Base
   # tell if provided user is allowed to edit this file
   def mayEdit? ( other_user )
     if ( (not other_user.valid?) or ( other_user.is_a?(User) == false ) )
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-      # d"basic check failed"
-      # dother_user.type
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "basic check failed"
+      # d other_user.type
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return false
     end
     user = getUser()
     if ( other_user == user )
       return true
     end
-    if ( ( public_policy == Dfile::PP_MAYEDIT ) )
+    if ( ( self.public_policy == Dfile::PP_MAYEDIT ) )
       return true
     end
-    if special_users
-      special = special_users[other_user.id]
+    if self.special_users
+      special = self.special_users[other_user.id.to_s]
       if special
         if ( ( special == Dfile::PP_MAYEDIT ) )
           return true
@@ -221,20 +237,30 @@ class Dfile < ActiveRecord::Base
   # returns true for success, false for failure
   def setPermission( other_user, perm )
     if ( (not other_user.valid?) or ( other_user.is_a?(User) == false ) )
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-      # d"basic check failed"
-      # dother_user.type
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "basic check failed"
+      # d other_user.type
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return false
     end
     user = getUser()
     if ( other_user == user )
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "same user as owner"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return true
     end
-    if not special_users
-      special_users = {}
+    if not self.special_users
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "creating special users group"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      self.special_users = {}
     end
-    special_users[other_user.id] = perm
+    self.special_users[other_user.id.to_s] = perm
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "new permission:"
+      # d self.special_users
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     return true
   end
   # =======================================================================
@@ -261,20 +287,34 @@ class Dfile < ActiveRecord::Base
   # returns true for success, false for failure
   def removePermission( other_user )
     if ( (not other_user.valid?) or ( other_user.is_a?(User) == false ) )
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-      # d"basic check failed"
-      # dother_user.type
-      # d"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "basic check failed"
+      # d other_user.type
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return false
     end
-    user = getUser()
+    user = self.getUser()
     if ( other_user == user )
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "same user as owner"
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return false
     end
-    if special_users
-      special_users.delete( other_user.id )
+    if self.special_users
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "group before"
+      # d self.special_users
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      self.special_users.delete( other_user.id.to_s )
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      # d "group after"
+      # d self.special_users
+      # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       return true
     end
+    # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    # d "The file has no special group"
+    # d "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     return false
   end
   # =======================================================================
@@ -291,24 +331,24 @@ private
 
   # -----------------------------------------------------------------------
   def allocStorage
-    # # d"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    # # d"allocate storage for file"
-    # # dself.id
-    # # d"file type"
-    # # dself.ftype
-    # # d"type index"
-    # # dself.type_index
-    # # d"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    # d "allocate storage for file"
+    # d self.id
+    # d "file type"
+    # d self.ftype
+    # d "type index"
+    # d self.type_index
+    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
     case self.ftype
     when FTYPE_SHEET
       if ( ( not self.type_index ) or ( self.type_index == -1 ) )
         sheet = Sheet.create( dfile_id: self.id )
         self.type_index = sheet.id
         self.save()
-        # # d"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-        # # d"allocStorage: math sheet"
-        # # dsheet
-        # # d"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
+        # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        # d "allocStorage: math sheet"
+        # d sheet
+        # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"    
       end
     else
       self.type_index = -1
@@ -319,19 +359,19 @@ private
   
   # -----------------------------------------------------------------------
   def releaseStorage
-    # # d"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    # # d"release storage for file"
-    # # dself.id
-    # # d"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    # d "release storage for file"
+    # d self.id
+    # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
     
     case self.ftype
     when FTYPE_SHEET
       sheet = Sheet.find_by_id(self.type_index)
       if ( sheet )
-        # # d"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-        # # d"releaseStorage: math sheet"
-        # # dsheet
-        # # d"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        # d "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        # d "releaseStorage: math sheet"
+        # d sheet
+        # d "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
         # sheet.decRef()
         sheet.destroy
       end
