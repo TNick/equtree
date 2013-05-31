@@ -13,19 +13,19 @@
 #
 # ------------------------------------------------------------------------- 
 # ========================================================================= 
-//
-//
-//
-//
+#
+#
+#
+#
 #  INCLUDES    ------------------------------------------------------------ 
 
 source 'https://rubygems.org'
 
 #  INCLUDES    ============================================================ 
-//
-//
-//
-//
+#
+#
+#
+#
 #  COMMON GEMS    --------------------------------------------------------- 
 
 
@@ -48,51 +48,29 @@ gem 'jquery-ui-themes'
 
 
 #  COMMON GEMS    ========================================================= 
-//
-//
-//
-//
+#
+#
+#
+#
 #  DEVELOPMENT    ---------------------------------------------------------
 
 group :development do
-  
-  # using sqlite in LOCAL MACHINE
-  gem 'sqlite3', '1.3.5'
-  
-  # for spork
-  gem 'guard-spork', '1.2.0'
-  gem 'childprocess'
-  gem 'spork', '0.9.2'
     
-  # for testing we're using RSpec
-  gem 'rspec-rails', '2.11.0'
-  gem 'guard-rspec', '1.2.1'
-  
   # add some smart comments about the structure of our tables
   gem 'annotate', '2.5.0'
-
-  gem 'log_buddy'
-  gem 'webrick', '~> 1.3.1'
   
   require 'rbconfig'
   gem 'wdm', '>= 0.1.0' if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/i
 end
 
 #  DEVELOPMENT    =========================================================
-//
-//
-//
-//
+#
+#
+#
+#
 #  TESTS    ---------------------------------------------------------------
 
 group :test do
-  
-  # using sqlite in LOCAL MACHINE
-  gem 'sqlite3', '1.3.5'
-  
-  # for testing we're using RSpec
-  gem 'rspec-rails', '2.11.0'
-  gem 'guard-rspec', '1.2.1'
   
   # easly create database components
   gem 'factory_girl_rails', '4.1.0'
@@ -100,11 +78,6 @@ group :test do
   # better tests with this
   gem 'capybara', '1.1.2'
   
-  # for spork
-  gem 'guard-spork', '1.2.0'
-  gem 'childprocess'
-  gem 'spork', '0.9.2'
-
   # for Guard
   gem 'rb-fchange', '0.0.5',   :platform => [:mswin, :mingw]
   gem 'rb-notifu', '0.0.4',    :platform => [:mswin, :mingw]
@@ -112,16 +85,44 @@ group :test do
   gem 'rb-inotify', '0.9.0',   :platform => [:ruby]  
   gem 'libnotify', '0.5.9',    :platform => [:ruby]  
 
-
-  gem 'log_buddy'
-  gem 'webrick', '~> 1.3.1'
 end
 
 #  TESTS    ===============================================================
-//
-//
-//
-//
+#
+#
+#
+#
+#  DEVELOPMENT AND TESTS    -----------------------------------------------
+
+
+group :development, :test do
+
+  # using sqlite in LOCAL MACHINE
+  gem 'sqlite3', '1.3.5'
+  
+  # for testing we're using RSpec
+  gem 'rspec-rails', '2.11.0'
+  gem 'guard-rspec', '1.2.1'
+  
+  # for spork
+  gem 'guard-spork', '1.2.0'
+  gem 'childprocess'
+  gem 'spork', '0.9.2'
+  
+  gem "teabag"
+  gem "guard-teabag"
+  gem "rb-fsevent" # used by guard
+  
+  gem 'log_buddy'
+  gem 'webrick', '~> 1.3.1'
+  
+end
+
+#  DEVELOPMENT AND TESTS    ===============================================
+#
+#
+#
+#
 #  ASSETS    --------------------------------------------------------------
 
 group :assets do
@@ -141,10 +142,10 @@ group :assets do
 end
 
 #  ASSETS    ==============================================================
-//
-//
-//
-//
+#
+#
+#
+#
 #  PRDUCTION    -----------------------------------------------------------
 
 group :production do
@@ -154,9 +155,9 @@ group :production do
 end
 
 #  PRDUCTION    ===========================================================
-//
-//
-//
-//
+#
+#
+#
+#
 # ------------------------------------------------------------------------- 
 # ========================================================================= 

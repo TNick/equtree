@@ -50,3 +50,11 @@ guard 'rspec', :version => 2, :all_after_pass => false, :cli => '--drb' do
 end
 
 
+
+guard :teabag do
+  # Implementation files
+  watch(%r{app/assets/javascripts/(.+).js}) { |m| "#{m[1]}_spec" }
+
+  # Specs / Helpers
+  watch(%r{spec/javascripts/(.*)})
+end

@@ -51,6 +51,8 @@ describe "Static pages" do
     
     it_should_behave_like "all static pages"
     it { should_not have_selector 'title', text: '| Home' }
+    it { should have_content( 'Welcome' ) }
+    it { find_link( "Sign up" )[:href].should ==("/signup") }
     
   end # describe "Home page"
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -63,7 +65,7 @@ describe "Static pages" do
     let(:page_title) { 'Contact' }
 	
 	it_should_behave_like "all static pages"
-            
+    
   end
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
@@ -94,16 +96,16 @@ describe "Static pages" do
   it "should have the right links on the layout" do
     visit root_path
     click_link "About"
-    page.should have_selector 'title', text: full_title('About Us')
+    should have_selector 'title', text: full_title('About Us')
     click_link "Help"
-    page.should have_selector 'title', text: full_title('Help')
+    should have_selector 'title', text: full_title('Help')
     click_link "Contact"
-    page.should have_selector 'title', text: full_title('Contact')
+    should have_selector 'title', text: full_title('Contact')
     click_link "Home"
     click_link "Sign up now!"
-    page.should have_selector 'title', text: full_title('Sign up')
+    should have_selector 'title', text: full_title('Sign up')
     click_link "EquTree"
-    page.should have_selector 'title', text: full_title('')
+    should have_selector 'title', text: full_title('')
   end  
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   

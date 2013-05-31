@@ -76,26 +76,9 @@ describe "Sheet model" do
   # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
   
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#   describe "description" do
-#     describe "is valid filled" do
-#         before do
-#           @sheet.description = 'Some description'
-#         end
-#         it { should be_valid }
-#      end
-#     describe "is valid empty" do
-#         before do
-#           @sheet.description = ''
-#         end
-#         it { should be_valid }
-#      end
-#   end
-  # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  describe "toJSON method" do
+  describe "to_hash method" do
     it "should return proper content" do
-      @sheet.toJSON().should_not be_empty
+      @sheet.to_hash().should_not be_empty
     end
 
   end

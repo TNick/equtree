@@ -54,7 +54,7 @@ class Sheet < ActiveRecord::Base
   belongs_to :dfile
   
   # master context is embedded here
-  #has_one :context, :dependent => :destroy
+  has_one :context
   has_many :contexts, dependent: :delete_all
   
   #  ATTRIBUTES    ========================================================
@@ -78,52 +78,69 @@ class Sheet < ActiveRecord::Base
   #  MODIFIERS    ---------------------------------------------------------
   
   # create master context
-  before_create :createResources
+  after_create :createResources
   
   #  MODIFIERS    =========================================================
   #
   #
   #
   #
-  #  PRIVATE HELPERS    ---------------------------------------------------
-
+  #  PUBLIC METHODS    ----------------------------------------------------
+  
   # -----------------------------------------------------------------------
   # get associated context
   def mainContext
-    return Context.find( context )
+    # return Context.find( context )
+    return context
   end
   # =======================================================================
 
   # -----------------------------------------------------------------------
-  # convert the conent of this sheet to JSON
-  def toJSON
+  # returns the content of the instance as a hash, appropriate for sending 
+  # to the client
+  def to_hash ()
     
-    ctx = mainContext
-    return ctx.toJSON()
+    ctx_list = []
+    contexts.each do |ctx|
+      ctx_list.push( ctx.to_hash() )
+    end
+    
+    result = {
+      contexts: ctx_list,
+      root_context: context.id,
+      dfile: dfile_id
+    }
 
-    #frm_ary = []
-    #formulas.each do |formula|
-    #  frm_ary += formula.toJSON()
-    #end
-    #result = {
-          #description: description,
-          #formulas: frm_ary,
-          #file_type: 'mathsheet'
-    #  }
-    #return result
+    return result
   end
   # =======================================================================
+  
+  # -----------------------------------------------------------------------
+  # the description for the sheet is provided by the root context
+  def description ()
+    return context.description  
+  end
+  # =======================================================================
+ 
+  #  PUBLIC METHODS    ====================================================
+  #
+  #
+  #
+  #
+  #  PRIVATE HELPERS    ---------------------------------------------------
 
 private
 
   # -----------------------------------------------------------------------
   def createResources
-    self.context = create_context( 
-      position_left: 0.0, position_top: 0.0, 
-      size_width: 50.0, size_height: 50.0)
+    if self.context.nil?
+      self.context = self.contexts.create( 
+        position_left: 0.0, position_top: 0.0, 
+        size_width: 500.0, size_height: 500.0)
+      self.save()
+    end
   end
   # =======================================================================
-
 
   #  PRIVATE HELPERS    ===================================================
   #

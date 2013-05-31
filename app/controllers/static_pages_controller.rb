@@ -32,7 +32,7 @@ class StaticPagesController < ApplicationController
       @directory = current_user.directories.build 
       @directories = current_user.directories.arrange(:order => :created_at)
     end
-
+    #join_html_output
   end # def home
   # ======================================================================
   

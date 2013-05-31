@@ -45,6 +45,11 @@ class ApplicationController < ActionController::Base
   end # def handle_unverified_request
   # ======================================================================
   
+  # ----------------------------------------------------------------------
+  def join_html_output
+    response.body.gsub!(/>\s+</, '><')
+  end
+  # ======================================================================
   
 end # class ApplicationController
 

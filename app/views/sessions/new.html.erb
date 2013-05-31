@@ -42,9 +42,10 @@
 
       <%= f.label :password %>
       <%= f.password_field :password %>
-
+      <div>
       <%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
-
+      </div>
+      
     <% end %>
 
     <p>New user? <%= link_to "Sign up now!", signup_path %></p>
