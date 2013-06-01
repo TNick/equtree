@@ -115,6 +115,9 @@ group :development, :test do
   
   gem 'log_buddy'
   gem 'webrick', '~> 1.3.1'
+
+  gem 'launchy'
+  gem 'database_cleaner'
   
 end
 

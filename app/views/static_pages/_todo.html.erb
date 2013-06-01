@@ -1,6 +1,8 @@
 
 
 
+
+
   <ul>
     <li>
       position of expressions and context; rows in tables;
@@ -94,7 +96,7 @@
     </li>
     <li>
       new directories go to top, new files go to bottom of files tree
-      or sort the tree after each update</li>
+      or sort the tree after each update</li><li>when signed in use the user name instead of the Sign in at the top</li><li>create directory and start editing instead of the prompt dialogue<br></li><li><br></li>
     
     
   </ul><h1>Models&nbsp;and Tables</h1><h2>users</h2><div>This table stores the list of users and their attributes, like name, e-mail, password, administrative rights.&nbsp;The User also stores a list of directories.&nbsp; <br>Permissions for an user are determined using following algorithm:<br><ol><li>if the resource (file, directory) belongs to current user then it has the right to view and edit</li><li>if the resource belongs to a different user:</li><ol><li>if current user is in the list of special users for current resources then the right stored there is used (view or view and edit)</li><li>if the resource is publicly editable everyone can edit it</li><li>if the resource is publicly viewable then everyone may view it but not edit it</li></ol></ol><br></div>
@@ -222,5 +224,7 @@ current user does not have access.<br></div><li><span style="font-size: 14px;"><
 <br>
 </div>
 
+
+  
 
   
